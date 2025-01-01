@@ -1,7 +1,7 @@
-import { ActionRowBuilder, ApplicationCommandType, ContextMenuCommandBuilder, GuildMember, ModalBuilder, ModalSubmitInteraction, PermissionFlagsBits, TextInputBuilder, TextInputStyle, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, ContextMenuCommandBuilder, EmbedBuilder, GuildMember, ModalBuilder, ModalSubmitInteraction, PermissionFlagsBits, TextInputBuilder, TextInputStyle, UserContextMenuCommandInteraction } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel } from '../../schemas/Guild';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new ContextMenuCommandBuilder()
@@ -16,7 +16,7 @@ module.exports = {
 				if (member.id == interaction.guild.members.me.id) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'I cannot warn myself!'
 							})
@@ -30,7 +30,7 @@ module.exports = {
 					interaction.guild.ownerId != interaction.user.id) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description:
 									'You do not have a higher role than the target member.'
@@ -61,7 +61,7 @@ module.exports = {
 			.catch(() => {
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.danger,
 							description: 'Could not find this user in this server.'
 						})
@@ -79,7 +79,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Warn',
 					fields: [
@@ -92,7 +92,7 @@ module.exports = {
 
 		(await interaction.guild.members.fetch(userId)).send({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.danger,
 					title: 'Warn',
 					description: `You have been warned by ${interaction.member}.`,

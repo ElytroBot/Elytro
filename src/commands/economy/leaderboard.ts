@@ -1,6 +1,6 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, Client, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, Client, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import { Button } from '../../structure/Button';
 import { UserModel } from '../../schemas/User';
@@ -41,7 +41,7 @@ async function getEmbed(page: number, client: Client) {
 	const userCount = await UserModel.countDocuments();
 	const pageCount = (userCount / 10 < 5)? Math.ceil(userCount / 10) : 5;
 
-	return new Embed({
+	return new EmbedBuilder({
 		color: EmbedColor.primary,
 		title: 'Leaderboard',
 		description: description,

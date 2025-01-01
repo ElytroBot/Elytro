@@ -1,6 +1,6 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import outcomes from '../../json/outcomes.json';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
@@ -16,7 +16,7 @@ module.exports = {
 		if (!user || user.inventory.get('Shovel') == 0) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You need a shovel in order to dig! Try using the shop to buy one.'
 					})
@@ -31,7 +31,7 @@ module.exports = {
 		if (user.cooldowns.get('dig') > now) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: `You are on cooldown! Come back <t:${user.cooldowns.get('dig')}:R>`
 					})
@@ -48,7 +48,7 @@ module.exports = {
 
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.primary,
 						title: 'Dig',
 						description: `YOU FOUND A CHEST WITH ${money.toLocaleString()} ${emojis.coin} IN IT!!!!`
@@ -62,7 +62,7 @@ module.exports = {
 
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.primary,
 						title: 'Dig',
 						description: outcomes.dig.success[
@@ -76,7 +76,7 @@ module.exports = {
 		else {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.primary,
 						title: 'Dig',
 						description:

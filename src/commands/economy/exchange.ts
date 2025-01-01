@@ -1,12 +1,12 @@
-import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import { Button } from '../../structure/Button';
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('exchange')
-		.setDescription('Trade on the elias bot exchange.'),
+		.setDescription('Trade on the Elytro exchange.'),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		interaction.reply(getMessage());
@@ -76,7 +76,7 @@ module.exports = {
 function getMessage() {
 	return {
 		embeds: [
-			new Embed({
+			new EmbedBuilder({
 				color: EmbedColor.primary,
 				title: 'Exchange',
 				fields: [

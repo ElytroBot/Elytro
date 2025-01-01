@@ -1,6 +1,6 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
 
@@ -17,7 +17,7 @@ module.exports = {
 		if (user.cooldowns.get('daily') > now) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: `You have already claimed today's coins! Come back <t:${user.cooldowns.get('daily')}:R>`
 					})
@@ -29,7 +29,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Daily',
 					description: `You got 10,000 ${emojis.coin}`

@@ -1,7 +1,7 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { UserModel } from '../../schemas/User';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,7 +20,7 @@ module.exports = {
 		if (!reason) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.success,
 						description: 'Afk status successfully removed!'
 					})
@@ -35,7 +35,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.success,
 					description: 'Afk status successfully updated!'
 				})

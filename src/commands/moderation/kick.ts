@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -29,7 +29,7 @@ module.exports = {
 				if (member.id == interaction.guild.members.me.id) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'I cannot kick myself!'
 							})
@@ -42,7 +42,7 @@ module.exports = {
 				if (!member.kickable) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'I cannot kick a user with a higher or equal role.'
 							})
@@ -55,7 +55,7 @@ module.exports = {
 				member.kick(reason);
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Kick',
 							fields: [
@@ -69,7 +69,7 @@ module.exports = {
 			.catch(() => {
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.danger,
 							description: 'Could not find this user in this server.'
 						})

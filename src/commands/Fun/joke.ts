@@ -1,6 +1,6 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import jokes from '../../json/jokes.json';
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
 	async onCommandInteraction(interaction) {
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Joke',
 					description: jokes[Math.floor(Math.random() * jokes.length)]

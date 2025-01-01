@@ -1,6 +1,6 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import { ActionRowBuilder, SelectMenuBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from '@discordjs/builders';
 import outcomes from '../../json/outcomes.json';
@@ -41,7 +41,7 @@ module.exports = {
 		if (user.cooldowns.get('search') > now) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: `You are on cooldown! Come back <t:${user.cooldowns.get('search')}:R>`
 					})
@@ -53,7 +53,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Search',
 					description: 'Select a place to search.'
@@ -74,7 +74,7 @@ module.exports = {
 		if (interaction.user.id != interaction.message.interaction.user.id) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You are not allowed to use this select menu!'
 					})
@@ -97,7 +97,7 @@ module.exports = {
 		if (random > 60) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.primary,
 						title: 'Search',
 						description: outcomes.search.fail[Math.floor(
@@ -114,7 +114,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Search',
 					description: outcomes.search.success[Math.floor(

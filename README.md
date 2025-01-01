@@ -1,21 +1,21 @@
 <div align="center">
-  <img src="https://i.imgur.com/xrLW6HE.png"/>
+  <img width="350px" src="https://i.imgur.com/I7Nxp6B.png"/>
 </div>
 
-# Elias Bot
+# Elytro
 
-Elias Bot is a fun and robust Discord bot that brings a bunch of cool features to your server. Whether you’re running a busy community, hanging out with friends, or looking to add some friendly competition, Elias Bot has you covered with it's wide range of plugins.
+Elytro is a fun and robust Discord bot that brings a bunch of cool features to your server. Whether you’re running a busy community, hanging out with friends, or looking to add some friendly competition, Elytro has you covered with it's wide range of plugins.
 
 ## Plugins
 
 ### Economy
-Elias Bot includes a comprehensive economy system, perfect for adding fun and competitiveness to your server. With this plugin, users can:
+Elytro includes a comprehensive economy system, perfect for adding fun and competitiveness to your server. With this plugin, users can:
 - Earn money through actions like **working**, **begging**, **digging**, and **gambling**.
 - Spend money in the **shop** to buy items and enhance their status.
 - Even **rob** or compete with friends to see who can build the most wealth!
 
 ### Moderation
-Keep your server under control with Elias Bot's **Moderation** plugin. Manage members, channels, and messages effortlessly:
+Keep your server under control with Elytro's **Moderation** plugin. Manage members, channels, and messages effortlessly:
 - **Warn, kick, or ban members** who break the rules.
 - **Lock or unlock channels** to manage access during important events.
 - **Purge messages** in bulk to keep chat clean.
@@ -44,7 +44,7 @@ Boost engagement with the **Leveling** plugin:
 Run the following command to clone the repository.
 
 ```shell
-git clone https://github.com/elias-bot-official/elias-bot
+git clone https://github.com/ElytroBot/Elytro
 ```
 
 Then install the needed dependencies.

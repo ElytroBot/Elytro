@@ -11,7 +11,7 @@
 	},
 	"plugins": ["@typescript-eslint"],
 	"rules": {
-    "max-len": ["warn", { "code": 100, "ignoreStrings": true, "ignoreTemplateLiterals": true, "tabWidth": 2 }],
+		"max-len": ["warn", { "code": 100, "ignoreStrings": true, "ignoreTemplateLiterals": true, "tabWidth": 2 }],
 		"indent": ["warn", "tab", { "SwitchCase": 1 }],
 		"linebreak-style": ["warn", "windows"],
 		"quotes": ["warn", "single"],

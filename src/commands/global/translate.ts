@@ -1,7 +1,7 @@
-import { ApplicationCommandType, ApplicationIntegrationType, ContextMenuCommandBuilder, InteractionContextType, MessageContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, ApplicationIntegrationType, ContextMenuCommandBuilder, EmbedBuilder, InteractionContextType, MessageContextMenuCommandInteraction } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { load } from 'cheerio';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new ContextMenuCommandBuilder()
@@ -21,7 +21,7 @@ module.exports = {
 		if (interaction.targetMessage.content.length == 0) {
 			interaction.reply({
 				embeds: [
-					new Embed()
+					new EmbedBuilder()
 						.setColor(EmbedColor.danger)
 						.setDescription('Cannot translate an empty message.')
 				],

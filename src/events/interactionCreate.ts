@@ -1,6 +1,6 @@
-import { Interaction, RepliableInteraction } from 'discord.js';
+import { EmbedBuilder, Interaction, RepliableInteraction } from 'discord.js';
 import { Listener } from '../structure/Listener';
-import { Embed, EmbedColor } from '../structure/Embed';
+import { EmbedColor } from '../structure/EmbedColor';
 
 module.exports = {
 	async execute(interaction: Interaction) {
@@ -16,7 +16,7 @@ module.exports = {
 				await interaction.fetchReply();
 				interaction.followUp({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Leave a Review',
 							description: 'Do you like what your seeing? Don\'t forget to leave us a [review](https://top.gg/bot/904730769929429072#reviews).'
@@ -29,10 +29,10 @@ module.exports = {
 				await interaction.fetchReply();
 				interaction.followUp({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Vote',
-							description: 'Support elias bot by [voting](https://top.gg/bot/904730769929429072/vote).'
+							description: 'Support Elytro by [voting](https://top.gg/bot/904730769929429072/vote).'
 						})
 					],
 					ephemeral: true
@@ -79,7 +79,7 @@ module.exports = {
 function reportError(e: Error, interaction: RepliableInteraction) {
 	interaction.reply({
 		embeds: [
-			new Embed({
+			new EmbedBuilder({
 				color: EmbedColor.danger,
 				title: 'Error',
 				description: `An unknown error has occurred. You can report this error by using </report:1306353943042986016> or by joining our [Discord server](https://discord.gg/KCY2RERtxk).\`\`\`${e.message}\`\`\``

@@ -1,6 +1,6 @@
-import { ActionRowBuilder, ApplicationIntegrationType, ButtonBuilder, ChatInputCommandInteraction, InteractionContextType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ApplicationIntegrationType, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import jokes from '../../json/jokes.json';
 import wyr from '../../json/wyr.json';
 import trivia from '../../json/trivia.json';
@@ -9,7 +9,7 @@ import { Button } from '../../structure/Button';
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('bot')
-		.setDescription('Commands related to elias bot.')
+		.setDescription('Commands related to Elytro.')
 		.setContexts(
 			InteractionContextType.BotDM,
 			InteractionContextType.Guild,
@@ -22,13 +22,13 @@ module.exports = {
 		.addSubcommand(
 			new SlashCommandSubcommandBuilder()
 				.setName('info')
-				.setDescription('Gives info about elias bot.')
+				.setDescription('Gives info about Elytro.')
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		interaction.reply({
 			embeds: [
-				new Embed({ color: EmbedColor.primary, title: 'Bot Info' }).addFields(
+				new EmbedBuilder({ color: EmbedColor.primary, title: 'Bot Info' }).addFields(
 					{
 						name: 'Servers',
 						value: interaction.client.guilds.cache.size.toLocaleString(),

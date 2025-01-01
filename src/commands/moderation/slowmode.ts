@@ -1,6 +1,6 @@
-import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandChannelOption, ChannelType, ChatInputCommandInteraction, TextChannel, SlashCommandIntegerOption } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandChannelOption, ChannelType, ChatInputCommandInteraction, TextChannel, SlashCommandIntegerOption, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -31,7 +31,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.success,
 					title: 'Slowmode Set',
 					fields: [

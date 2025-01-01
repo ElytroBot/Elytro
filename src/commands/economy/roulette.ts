@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
 
@@ -34,7 +34,7 @@ module.exports = {
 		if (!user || user.balance < bet) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You cannot bet more money than you own.'
 					})
@@ -48,7 +48,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Roulette',
 					description: `You ${won? 'won' : 'lost'} ${bet.toLocaleString()} ${emojis.coin}!`

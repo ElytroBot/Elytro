@@ -1,14 +1,14 @@
 {
-  "name": "elias-bot",
+  "name": "elytro",
   "version": "3.0.0",
-  "description": "The official elias discord bot.",
+  "description": "The official Elytro discord bot.",
   "main": "src/index.ts",
   "scripts": {
     "dev": "set NODE_ENV=development&& ts-node src/index.ts",
     "prod": "set NODE_ENV=production&& ts-node src/index.ts"
   },
   "keywords": [
-    "elias-bot",
+    "Elytro",
     "discord-bot"
   ],
   "author": "exceptionee",

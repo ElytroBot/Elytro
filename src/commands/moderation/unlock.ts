@@ -1,6 +1,6 @@
-import { ChannelType, ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, SlashCommandChannelOption, TextChannel } from 'discord.js';
+import { ChannelType, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandChannelOption, TextChannel } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -27,8 +27,11 @@ module.exports = {
 		
 		interaction.reply({
 			embeds: [
-				new Embed({ color: EmbedColor.primary, title: 'Unlock' })
-					.addField('Channel', channel.toString())
+				new EmbedBuilder({
+					color: EmbedColor.primary,
+					title: 'Unlock',
+					fields: [{ name: 'Channel', value: channel.toString() }]
+				})
 			]
 		});
 	}

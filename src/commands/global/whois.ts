@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import { GuildModel } from '../../schemas/Guild';
 
@@ -26,7 +26,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Whois',
 							fields: [
@@ -78,7 +78,7 @@ module.exports = {
 			.catch(() => {
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.danger,
 							description: 'Could not find this user in this server.'
 						})

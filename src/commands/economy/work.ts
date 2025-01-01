@@ -1,6 +1,6 @@
-import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import { Button } from '../../structure/Button';
 import { UserModel } from '../../schemas/User';
@@ -18,7 +18,7 @@ module.exports = {
 		if (dbUser.cooldowns.get('work') > now) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: `You are on cooldown! Come back <t:${dbUser.cooldowns.get('work')}:R>`
 					})
@@ -43,7 +43,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Work',
 					description: `Remember the colors of the following shapes.\n\n${sequence}`
@@ -62,7 +62,7 @@ module.exports = {
 		if (interaction.user.id != interaction.message.interaction.user.id) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You are not allowed to use this button!'
 					})
@@ -80,7 +80,7 @@ module.exports = {
 
 			interaction.message.edit({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.success,
 						title: 'Correct',
 						description: `Good job! You earned ${money.toLocaleString()} ${emojis.coin} for your work.`
@@ -95,7 +95,7 @@ module.exports = {
 
 			interaction.message.edit({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						title: 'Incorrect',
 						description: `Terrible job. You earned ${money.toLocaleString()} ${emojis.coin} for your work.`
@@ -126,7 +126,7 @@ function showButtons(interaction: ChatInputCommandInteraction, emoji: string) {
 
 	interaction.editReply({
 		embeds: [
-			new Embed({
+			new EmbedBuilder({
 				color: EmbedColor.primary,
 				title: 'Work',
 				description: `What color was the ${shape}?`

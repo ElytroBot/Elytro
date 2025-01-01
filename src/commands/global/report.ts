@@ -1,6 +1,6 @@
-import { ApplicationIntegrationType, ChatInputCommandInteraction, InteractionContextType, SlashCommandAttachmentOption, SlashCommandBuilder, SlashCommandStringOption, TextChannel } from 'discord.js';
+import { ApplicationIntegrationType, ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, SlashCommandAttachmentOption, SlashCommandBuilder, SlashCommandStringOption, TextChannel } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -35,7 +35,7 @@ module.exports = {
 
 		(channel as TextChannel).send({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.danger,
 					title: 'Bug Report',
 					fields: [

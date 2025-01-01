@@ -1,8 +1,8 @@
-import { Message, TextChannel } from 'discord.js';
+import { EmbedBuilder, Message, TextChannel } from 'discord.js';
 import { Listener } from '../structure/Listener';
 import { GuildModel, getLevel, getXP } from '../schemas/Guild';
 import { UserModel } from '../schemas/User';
-import { Embed, EmbedColor } from '../structure/Embed';
+import { EmbedColor } from '../structure/EmbedColor';
 
 module.exports = {
 	async execute(message: Message) {
@@ -15,7 +15,7 @@ module.exports = {
 			if (mention.afk_status) {
 				message.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'This user is afk.',
 							fields: [

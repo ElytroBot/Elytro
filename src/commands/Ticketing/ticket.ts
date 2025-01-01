@@ -1,6 +1,6 @@
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandStringOption, TextChannel, ChatInputCommandInteraction, ActionRowBuilder, ButtonInteraction, ChannelType } from 'discord.js';
+import { SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandStringOption, TextChannel, ChatInputCommandInteraction, ActionRowBuilder, ButtonInteraction, ChannelType, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import { Button } from '../../structure/Button';
 import { GuildModel } from '../../schemas/Guild';
 
@@ -35,7 +35,7 @@ module.exports = {
 			.then((logChannel: TextChannel) => {
 				logChannel.send({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Ticket Created',
 							description: interaction.options.getString('issue'),
@@ -69,7 +69,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.success,
 					description: 'Ticket successfully created!'
 				})
@@ -114,7 +114,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.success,
 							description: 'Ticket successfully claimed!'
 						})
@@ -152,7 +152,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.success,
 							description: 'Ticket has been closed.'
 						})
@@ -191,7 +191,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.success,
 							description: 'Ticket has been deleted.'
 						})

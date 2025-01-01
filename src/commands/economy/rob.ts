@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { transfer, UserDocument, UserModel } from '../../schemas/User';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 
 module.exports = {
@@ -21,7 +21,7 @@ module.exports = {
 		if (target.id == interaction.user.id) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You cannot rob yourself.'
 					})
@@ -34,7 +34,7 @@ module.exports = {
 		if (target.bot) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You cannot rob a bot.'
 					})
@@ -49,7 +49,7 @@ module.exports = {
 		if (!dbUser || dbUser.balance < 10000) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: `You need to have at least 10,000 ${emojis.coin} to rob someone.`
 					})
@@ -64,7 +64,7 @@ module.exports = {
 		if (!dbTarget || dbTarget.balance < 10000) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: `You cannot rob a user with less than 10,000 ${emojis.coin}`
 					})
@@ -79,7 +79,7 @@ module.exports = {
 		if (dbUser.cooldowns.get('rob') > now) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: `You are on cooldown! Come back <t:${dbUser.cooldowns.get('rob')}:R>`
 					})
@@ -144,7 +144,7 @@ function success(interaction: ChatInputCommandInteraction, dbUser: UserDocument,
 
 	interaction.reply({
 		embeds: [
-			new Embed({
+			new EmbedBuilder({
 				color: EmbedColor.success,
 				title: 'Success',
 				description: `You managed to steal ${money} ${emojis.coin} from ${target}.`
@@ -154,7 +154,7 @@ function success(interaction: ChatInputCommandInteraction, dbUser: UserDocument,
 
 	target.send({
 		embeds: [
-			new Embed({
+			new EmbedBuilder({
 				color: EmbedColor.danger,
 				title: 'Theft Alert',
 				description: `${user} stole ${money} ${emojis.coin} from you.`
@@ -173,7 +173,7 @@ function bust(interaction: ChatInputCommandInteraction, dbUser: UserDocument,
 
 	interaction.reply({
 		embeds: [
-			new Embed({
+			new EmbedBuilder({
 				color: EmbedColor.danger,
 				title: 'Bust',
 				description: `You got caught and had to pay ${target} ${money} ${emojis.coin}.`

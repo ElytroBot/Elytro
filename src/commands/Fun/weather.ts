@@ -1,6 +1,6 @@
-import { SlashCommandBuilder, ActionRowBuilder, MessageComponentInteraction, ButtonBuilder, SlashCommandStringOption, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ActionRowBuilder, MessageComponentInteraction, ButtonBuilder, SlashCommandStringOption, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import { Button } from '../../structure/Button';
 
@@ -38,7 +38,7 @@ module.exports = {
 		catch (error) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'Could not fetch weather data for this location.'
 					})
@@ -52,7 +52,7 @@ module.exports = {
 		if (interaction.user.id != interaction.message.interaction.user.id) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You are not allowed to use this button!'
 					})
@@ -73,7 +73,7 @@ module.exports = {
 		catch (error) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'Could not fetch weather data for this location.'
 					})
@@ -88,7 +88,7 @@ async function getEmbed(location: string, units: string, index: number) {
 	const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${process.env.WEATHER_API_KEY}&units=${units}`;
 	const forecast = (await fetch(forecastUrl).then(r => r.json()));
 
-	return new Embed({
+	return new EmbedBuilder({
 		color: EmbedColor.primary,
 		title: `Weather in ${forecast.city.name}`,
 		description: `<t:${forecast.list[index].dt}:f>`,

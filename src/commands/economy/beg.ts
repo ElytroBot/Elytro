@@ -1,6 +1,6 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import outcomes from '../../json/outcomes.json';
 import { UserModel } from '../../schemas/User';
@@ -18,7 +18,7 @@ module.exports = {
 		if (user.cooldowns.get('beg') > now) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: `You are on cooldown! Come back <t:${user.cooldowns.get('beg')}:R>`
 					})
@@ -33,7 +33,7 @@ module.exports = {
 
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.primary,
 						title: 'Beg',
 						description: outcomes.beg.success[
@@ -47,7 +47,7 @@ module.exports = {
 		else {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.primary,
 						title: 'Beg',
 						description:

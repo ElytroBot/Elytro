@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -37,7 +37,7 @@ module.exports = {
 				if (member.id == interaction.guild.members.me.id) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'I cannot ban myself!'
 							})
@@ -50,7 +50,7 @@ module.exports = {
 				if (!member.bannable) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'I cannot ban a user with a higher or equal role.'
 							})
@@ -63,7 +63,7 @@ module.exports = {
 				member.ban({ reason: reason, deleteMessageSeconds: hours * 3600 });
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Ban',
 							fields: [
@@ -78,7 +78,7 @@ module.exports = {
 			.catch(() => {
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.danger,
 							description: 'Could not find this user in this server.'
 						})

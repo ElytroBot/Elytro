@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,7 +23,7 @@ module.exports = {
 				if (!member.isCommunicationDisabled()) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'This user is not muted!'
 							})
@@ -36,10 +36,9 @@ module.exports = {
 				if (!member.manageable) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
-								description:
-									'I cannot unmute a user with a higher or equal role.'
+								description: 'I cannot unmute a user with a higher or equal role.'
 							})
 						],
 						ephemeral: true
@@ -51,15 +50,18 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({ color: EmbedColor.primary, title: 'Unmute' })
-							.addField('User', user.toString())
+						new EmbedBuilder({
+							color: EmbedColor.primary,
+							title: 'Unmute',
+							fields: [{ name: 'User', value: user.toString() }]
+						})
 					]
 				});
 			})
 			.catch(() => {
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.danger,
 							description: 'Could not find this user in this server.'
 						})

@@ -1,12 +1,12 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel } from '../../schemas/Guild';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('warns')
-		.setDescription('Commands related to elias bot\'s warning system.')
+		.setDescription('Commands related to Elytro\'s warning system.')
 		.addSubcommand(
 			new SlashCommandSubcommandBuilder()
 				.setName('view')
@@ -53,7 +53,7 @@ module.exports = {
 
 		switch (interaction.options.getSubcommand()) {
 			case 'view':
-				const embed = new Embed({ color: EmbedColor.primary, title: 'Warns' });
+				const embed = new EmbedBuilder({ color: EmbedColor.primary, title: 'Warns' });
 
 				guild.warns.forEach((warn, i) => {
 					if (warn.user_id == user.id) {
@@ -80,7 +80,7 @@ module.exports = {
 						if (member.id == interaction.guild.members.me.id) {
 							interaction.reply({
 								embeds: [
-									new Embed({
+									new EmbedBuilder({
 										color: EmbedColor.danger,
 										description: 'I cannot warn myself!'
 									})
@@ -95,7 +95,7 @@ module.exports = {
 							interaction.guild.ownerId != interaction.user.id) {
 							interaction.reply({
 								embeds: [
-									new Embed({
+									new EmbedBuilder({
 										color: EmbedColor.danger,
 										description: 'You do not have a higher role than the target member.'
 									})
@@ -107,7 +107,7 @@ module.exports = {
 						
 						interaction.reply({
 							embeds: [
-								new Embed({
+								new EmbedBuilder({
 									color: EmbedColor.primary,
 									title: 'Warn',
 									fields: [
@@ -120,7 +120,7 @@ module.exports = {
 
 						member.send({
 							embeds: [
-								new Embed({
+								new EmbedBuilder({
 									color: EmbedColor.danger,
 									title: 'Warn',
 									description: `You have been warned by ${interaction.member}.`,
@@ -138,7 +138,7 @@ module.exports = {
 					.catch(() => {
 						interaction.reply({
 							embeds: [
-								new Embed({
+								new EmbedBuilder({
 									color: EmbedColor.danger,
 									description: 'Could not find this user in this server.'
 								})
@@ -154,7 +154,7 @@ module.exports = {
 				if (!guild.warns[id]) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'User does not have a warning with this ID.'
 							})
@@ -166,7 +166,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Warning Deleted',
 							fields: [

@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { transfer, UserModel } from '../../schemas/User';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
 		if (receiver.bot) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You cannot give money to a bot!'
 					})
@@ -41,7 +41,7 @@ module.exports = {
 		if (interaction.user.id == receiver.id) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You cannot give money to yourself!'
 					})
@@ -57,7 +57,7 @@ module.exports = {
 		if (!dbUser || dbUser.balance < amount) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'You do not have this much money!'
 					})
@@ -72,7 +72,7 @@ module.exports = {
 
 		interaction.reply({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.success,
 					description: `You gave ${receiver} ${transfer(dbUser, dbReceiver, amount).toLocaleString()} ${emojis.coin}.`
 				})
@@ -81,7 +81,7 @@ module.exports = {
 
 		receiver.send({
 			embeds: [
-				new Embed({
+				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Donation Alert',
 					description: `${interaction.user} just gave you ${amount.toLocaleString()} ${emojis.coin}!`

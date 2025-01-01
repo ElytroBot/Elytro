@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction, AutocompleteInteraction, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, AutocompleteInteraction, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import shop from '../../json/shop.json';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
 
@@ -66,7 +66,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Shop',
 							description: description
@@ -84,7 +84,7 @@ module.exports = {
 				if (!buyUser || buyItem.price * buyAmount > buyUser.balance) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'You do not have enough money!'
 							})
@@ -96,7 +96,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Buy',
 							description: `You bought **${buyAmount}x ${emojis[buyItemName]} ${buyItemName}**!`
@@ -120,7 +120,7 @@ module.exports = {
 				if (!sellUser || (sellUser.inventory.get(sellItem) ?? 0) < sellAmount) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'You do not have enough items to sell!'
 							})
@@ -136,7 +136,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Sell',
 							description: `You sold **${sellAmount}x ${emojis[sellItem]} ${sellItem}** for ${sellPrice.toLocaleString()} ${emojis.coin}!`

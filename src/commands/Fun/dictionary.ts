@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -27,7 +27,7 @@ module.exports = {
 			const example = data[0].meanings[0].definitions[0].example || 'No example available';
 			const partOfSpeech = data[0].meanings[0].partOfSpeech;
 
-			const embed = new Embed()
+			const embed = new EmbedBuilder()
 				.setColor(EmbedColor.primary)
 				.setTitle(`Definition for "${word}"`)
 				.addFields(
@@ -40,7 +40,7 @@ module.exports = {
 			await interaction.reply({ embeds: [embed] });
 		}
 		catch (error) {
-			const errorEmbed = new Embed()
+			const errorEmbed = new EmbedBuilder()
 				.setColor(EmbedColor.danger)
 				.setDescription(error.message + '.');
 

@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,8 +22,11 @@ module.exports = {
 		interaction.channel.bulkDelete(amount, true);
 		interaction.reply({
 			embeds: [
-				new Embed({ color: EmbedColor.primary, title: 'Purge' })
-					.addField('Amount', amount.toString())
+				new EmbedBuilder({
+					color: EmbedColor.primary,
+					title: 'Purge',
+					fields: [{ name: 'Amount', value: amount.toString() }]
+				})
 			],
 			ephemeral: true
 		});

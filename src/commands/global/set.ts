@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { UserModel } from '../../schemas/User';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -38,7 +38,7 @@ module.exports = {
 				if (!/(null)|(#[0-9A-F]{6})/i.test(color).valueOf()) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'That is not a valid hex color.'
 							})
@@ -50,7 +50,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.success,
 							description: 'Successfully updated your accent color!'
 						})
@@ -67,7 +67,7 @@ module.exports = {
 				if (!/(null|(https:\/\/)?i\.imgur\.com\/.*)/i.test(url).valueOf()) {
 					interaction.reply({
 						embeds: [
-							new Embed({
+							new EmbedBuilder({
 								color: EmbedColor.danger,
 								description: 'That is not a valid imgur image url.'
 							})
@@ -79,7 +79,7 @@ module.exports = {
 
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.success,
 							description: 'Successfully updated your background!'
 						})

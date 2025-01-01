@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel, getLevel, getXP } from '../../schemas/Guild';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { EmbedColor } from '../../structure/EmbedColor';
 import { UserModel } from '../../schemas/User';
 import sharp from 'sharp';
 
@@ -22,7 +22,7 @@ module.exports = {
 		if (!dbGuild.xp.get(user.id)) {
 			interaction.reply({
 				embeds: [
-					new Embed({
+					new EmbedBuilder({
 						color: EmbedColor.danger,
 						description: 'This user has no XP.'
 					})
@@ -62,7 +62,7 @@ module.exports = {
 			.catch(() => {
 				interaction.reply({
 					embeds: [
-						new Embed({
+						new EmbedBuilder({
 							color: EmbedColor.danger,
 							description: 'Could not find this user in this server.'
 						})

@@ -1,11 +1,11 @@
-import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
-import { Embed, EmbedColor } from '../../structure/Embed';
+import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, SlashCommandBuilder } from 'discord.js';
+import { EmbedColor } from '../../structure/EmbedColor';
 import { Command } from '../../structure/Command';
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ping')
-		.setDescription('Pings elias bot.')
+		.setDescription('Pings Elytro.')
 		.setContexts(
 			InteractionContextType.BotDM,
 			InteractionContextType.Guild,
@@ -19,7 +19,7 @@ module.exports = {
 	async onCommandInteraction(interaction) {
 		interaction.reply({
 			embeds: [
-				new Embed({ color: EmbedColor.primary, title: 'Ping' }).addFields(
+				new EmbedBuilder({ color: EmbedColor.primary, title: 'Ping' }).addFields(
 					{
 						name: 'Bot Ping',
 						value: `${interaction.client.ws.ping}ms`,
