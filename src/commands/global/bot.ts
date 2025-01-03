@@ -41,7 +41,7 @@ module.exports = {
 					},
 					{
 						name: 'Ping',
-						value: interaction.client.ws.ping.toString(),
+						value: `${interaction.client.ws.ping}ms`,
 						inline: true
 					},
 					{

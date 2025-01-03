@@ -49,7 +49,7 @@ module.exports = {
 	},
 
 	async onButtonInteraction(interaction: MessageComponentInteraction) {
-		if (interaction.user.id != interaction.message.interaction.user.id) {
+		if (interaction.user.id != interaction.message.interactionMetadata.user.id) {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
