@@ -1,23 +1,27 @@
 {
 	"rps": {
 		"0": [
-			"Wow! You're so good you beat a robot!",
+			"Wow, congrats on beating a robot. Truly a legendary achievement.",
 			"Hey, you finally won for once.",
-			"Too ez.",
-			"Good job I guess?"
+			"Too easy, huh? Sure, let’s pretend it wasn’t luck.",
+			"Good job I guess?",
+			"Victory! Too bad no one cares.",
+			"Enjoy this fleeting moment of glory. It won't last."
 		],
 		"1": [
+			"Ah, a tie. The suspense is killing no one.",
 			"Well that was anticlimactic.",
 			"What are the odds?",
 			"Best out of three?",
-			"I guess you have to play again."
+			"I guess you have to play again.",
+			"So, uh… now what? Flip a coin?"
 		],
 		"2": [
-			"No one saw that.",
-			"Hey, did you know if you stop playing you will stop losing?",
+			"Pro tip: if you stop playing, you’ll stop losing. Revolutionary advice, I know.",
+			"Maybe next time! Or, you know, maybe not.",
 			"Maybe next time.",
 			"That is just embarrassing.",
-			"And we have a winner. Not you lol.",
+			"And we have a winner! Not you though lol.",
 			"Is there an easy mode?"
 		]
 	},
@@ -25,6 +29,8 @@
 		"success": [
 			"Oh, you poor thing, here is {money}.",
 			"You begged and got {money}.",
+			"A generous soul handed you {money}.",
+			"Someone threw {money} your way. Lucky!",
 			"**Elon Musk**: Here, have {money}.",
 			"**Jeff Bezos**: Here is {money}, go spend it on Amazon.",
 			"**Warren Buffett**: Here is {money}, go invest it in stocks.",
@@ -34,8 +40,10 @@
 		"fail": [
 			"Go beg somewhere else.",
 			"Sorry, I didn't bring my wallet.",
+			"People ignored you harder than a Terms of Service agreement.",
 			"Go get a job.",
 			"Imagine begging lol.",
+			"You got ignored. Try harder next time.",
 			"Ewwww, poor people.",
 			"**Karen**: Give you my money? Ridiculous.",
 			"**Ebenezer Scrooge**: Go get your own money."
@@ -50,6 +58,7 @@
 			"You found {money} just lying around. Finders keepers."
 		],
 		"fail": [
+			"You searched harder than a student before finals, and still got nothing.",
 			"You searched and found nothing, amazing!",
 			"You found nothing lol.",
 			"You searched in vain and left empty handed. Oh man.",
@@ -58,14 +67,19 @@
 	},
 	"dig": {
 		"success": [
-			"You found an old purse with {money} in it.",
+			"You found an old purse with {money} in it. Hey, I think that's my grandma's.",
 			"You found {money} buried in the ground.",
-			"You found a time capsule with {money} in it."
+			"You found a time capsule with {money} in it.",
+			"Amazing! You found {money} and a bottle cap. Truly priceless artifacts.",
+			"You found {money}, and possibly cursed treasure. Good luck with that."
 		],
 		"fail": [
+			"Just dirt. Lots and lots of dirt.",
 			"You turned up empty handed. Put your back into it next time.",
-			"You found nothing but dirt lol.",
-			"You reached bedrock and still didn't find anything."
+			"Congrats! You now own a hole. No money though.",
+			"Turns out you dug into your neighbor’s backyard. Awkward.",
+			"You reached bedrock and still didn't find anything.",
+			"Sir, this is a graveyard."
 		]
 	}
 }
