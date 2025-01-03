@@ -1,0 +1,20 @@
+{
+	"Economy": [
+		{
+			"title": "Introduction",
+			"description": "Welcome to the Economy plugin! This system adds a fun and competitive way to interact with other users. Earn coins, spend them on special items, and compete with others to dominate the leaderboard. Let’s get started!"
+		},
+		{
+			"title": "Earning Money",
+			"description": "Start building your wealth by earning money through commands:\n - `/daily`: Redeem a daily boost.\n - `/work`: Complete a task to earn coins.\n - `/beg`: Beg for people to give you spare change.\n - `/dig`: Try your luck by digging a hole.\n - `/search`: Search for coins in unlikely places."
+		},
+		{
+			"title": "Spending Money",
+			"description": "Once you've earned enough coins, it's time to spend them! Use `/shop view` to explore items available for purchase:\n - Buy fun or useful items to enhance your experience.\n - Invest in items that provide perks or boost your status.\n - Save up for rare or high-value items to show off your wealth!"
+		},
+		{
+			"title": "Robbing",
+			"description": "Feeling adventurous? Test your skills and luck with `/rob`:\n - Attempt to steal coins from another user.\n - Success means gaining their coins, but failure might cost you a fine!\n - Be strategic—choose your targets wisely and time your heists carefully!"
+		}
+	]
+}
