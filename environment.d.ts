@@ -1,10 +1,11 @@
 declare global {
 	namespace NodeJS {
 		interface ProcessEnv {
-			token: string;
-			db: string;
-			id: string;
-			WEATHER_API_KEY: string
+			TOKEN: string;
+			CONNECTION_STRING: string;
+			APPLICATION_ID: string;
+			WEATHER_API_KEY: string;
+			RAPID_API_KEY: string;
 			NODE_ENV: string;
 		}
 	}

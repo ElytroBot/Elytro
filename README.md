@@ -57,9 +57,12 @@ npm install
 To use this bot you must first define some environment variables. First create a `.env` file and set the following environment variables.
 
 |Variable| Description                                                     |
-|:-------| :---------------------------------------------------------------|
-|`token` | Your Discord bot's token.                                       |
-|`db`    | The MongoDB connection string for your database.                |
+|:------------------| :----------------------------------------------------|
+|`TOKEN`            | Your Discord bot's token.                            |
+|`CONNECTION_STRING`| The MongoDB connection string for your database.     |
+|`APPLICATION_ID`   | Your Discord bot's Application ID.                   |
+|`WEATHER_API_KEY`  | Your Weather API key.                                |
+|`RAPID_API_KEY`    | Your Rapid API key.                                  |
 
 ## Run Locally
 

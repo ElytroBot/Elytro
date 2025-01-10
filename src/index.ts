@@ -6,32 +6,32 @@ import fs from 'node:fs';
 import { Command } from './structure/Command';
 import mongoose from 'mongoose';
 
-// catches any uncaught exceptions
+// Catches any uncaught exceptions
 process.on('uncaughtException',
 	e => console.error(`[${new Date().toISOString()}] ${e.stack}`));
 
-config(); // configures dotenv module to be able to use env variables
+config(); // Configures the dotenv module to be able to use environment variables
 
-// merges a Client interface with the Client class
+// Merges a Client interface with the Client class
 declare module 'discord.js' {
 	interface Client {
 		commands: Command[];
 	}
 }
 
-// creates the discord client
+// Creates the Discord client
 const client = new Client({
 	intents: GatewayIntentBits.GuildMembers |
-    GatewayIntentBits.GuildPresences |
-    GatewayIntentBits.Guilds |
-    GatewayIntentBits.GuildMessageReactions |
-    GatewayIntentBits.MessageContent |
-    GatewayIntentBits.GuildMessages
+		GatewayIntentBits.GuildPresences |
+		GatewayIntentBits.Guilds |
+		GatewayIntentBits.GuildMessageReactions |
+		GatewayIntentBits.MessageContent |
+		GatewayIntentBits.GuildMessages
 });
-client.rest = new REST(); // creates a rest client
-client.commands = []; // initializes the client's commands
+client.rest = new REST(); // Creates a REST client
+client.commands = []; // Initializes the client's commands
 
-// loads the commands
+// Loads the commands
 fs.readdirSync(path.join(__dirname, 'commands')).forEach(folder => {
 	const folderPath = path.join(path.join(__dirname, 'commands'), folder);
 
@@ -41,7 +41,7 @@ fs.readdirSync(path.join(__dirname, 'commands')).forEach(folder => {
 	});
 });
 
-// loads the events
+// Loads the events
 fs.readdirSync(path.join(__dirname, 'events')).forEach(file => {
 	const event = require(path.join(path.join(__dirname, 'events'), file));
 
@@ -49,11 +49,11 @@ fs.readdirSync(path.join(__dirname, 'events')).forEach(file => {
 	else client.on(file.split(/\./g)[0], event.execute);
 });
 
-// starts the bot and rest client
-client.login(process.env.token);
-client.rest.setToken(process.env.token);
+// Starts the bot and REST client
+client.login(process.env.TOKEN);
+client.rest.setToken(process.env.TOKEN);
 
-// connects to the database
+// Connects to the database
 mongoose
-	.connect(process.env.db)
+	.connect(process.env.CONNECTION_STRING)
 	.then(() => console.log(`[${new Date().toISOString()}] Established connection with MongoDB`));
