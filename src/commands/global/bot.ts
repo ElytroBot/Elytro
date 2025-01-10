@@ -1,9 +1,6 @@
 import { ActionRowBuilder, ApplicationIntegrationType, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
-import jokes from '../../json/jokes.json';
-import wyr from '../../json/wyr.json';
-import trivia from '../../json/trivia.json';
 import { Button } from '../../structure/Button';
 
 module.exports = {
@@ -42,21 +39,6 @@ module.exports = {
 					{
 						name: 'Ping',
 						value: `${interaction.client.ws.ping}ms`,
-						inline: true
-					},
-					{
-						name: 'Jokes',
-						value: jokes.length.toString(),
-						inline: true
-					},
-					{
-						name: 'Trivia Questions',
-						value: trivia.length.toString(),
-						inline: true
-					},
-					{
-						name: 'WYR Questions',
-						value: wyr.length.toString(),
 						inline: true
 					}
 				)
