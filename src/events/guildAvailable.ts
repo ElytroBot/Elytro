@@ -10,7 +10,7 @@ module.exports = {
 		if (process.env.NODE_ENV != 'production') return;
 
 		guild.client.rest.put(
-			Routes.applicationGuildCommands(process.env.id, guild.id),
+			Routes.applicationGuildCommands(process.env.APPLICATION_ID, guild.id),
 			{ body: [] }
 		);
 
