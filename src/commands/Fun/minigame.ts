@@ -3,7 +3,6 @@ import { Command } from '../../structure/Command';
 import outcomes from '../../json/outcomes.json';
 import { EmbedColor } from '../../structure/EmbedColor';
 import { Button } from '../../structure/Button';
-import trivia from '../../json/trivia.json';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -42,35 +41,50 @@ module.exports = {
 				return;
 
 			case 'trivia':
-				const questionObject = trivia[Math.floor(Math.random() * trivia.length)];
-				const options = shuffleOptions(questionObject.options);
-				const optionsRow = new ActionRowBuilder<ButtonBuilder>();
+				fetch('https://the-trivia-api.com/v2/questions?limit=1')
+					.then(res => res.json())
+					.then(json => {
+						const options = [json[0].correctAnswer, ...json[0].incorrectAnswers]
+							.sort(() => Math.random() - 0.5);
+						const optionsRow = new ActionRowBuilder<ButtonBuilder>();
 
-				let formattedQuestion = questionObject.question + '\n\n';
-				options.forEach((option, index) => {
-					const letter = String
-						.fromCharCode(index.toString().charCodeAt(0) + 17);
+						let formattedQuestion = json[0].question.text + '\n\n';
+						options.forEach((option, index) => {
+							const letter = String
+								.fromCharCode(index.toString().charCodeAt(0) + 17);
+			
+							formattedQuestion += `${letter}. ${option}\n`;
+							optionsRow.addComponents(
+								Button.primary({
+									custom_id: `${option}|${json[0].correctAnswer}`,
+									label: letter
+								})
+							);
+						});
 
-					formattedQuestion += `${letter}. ${option}\n`;
-					optionsRow.addComponents(
-						Button.primary({
-							custom_id: `${option}|${questionObject.answer}`,
-							label: letter
-						})
-					);
-				});
-
-				interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.primary,
-							title: 'Trivia',
-							description: formattedQuestion
-						})
-					],
-					components: [optionsRow]
-				});
-				return;
+						interaction.reply({
+							embeds: [
+								new EmbedBuilder({
+									color: EmbedColor.primary,
+									title: 'Trivia',
+									description: formattedQuestion,
+									footer: { text: 'Powered by the-trivia-api.com' }
+								})
+							],
+							components: [optionsRow]
+						});
+					})
+					.catch(() => {
+						interaction.reply({
+							embeds: [
+								new EmbedBuilder({
+									color: EmbedColor.danger,
+									description: 'It looks like there was an issue with our trivia API. Please try again later.'
+								})
+							],
+							ephemeral: true
+						});
+					});
 		}
 	},
 
@@ -159,12 +173,3 @@ module.exports = {
 		}
 	}
 } satisfies Command;
-
-function shuffleOptions(array: string[]) {
-	for (let i = array.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[array[i], array[j]] = [array[j], array[i]];
-	}
-
-	return array;
-}
