@@ -6,13 +6,12 @@ module.exports = {
 	async execute(member: GuildMember) {
 		const guild = await GuildModel.findById(member.guild.id);
 
-		if (!guild?.plugins.includes('Saluter') || !guild.salutes_channel ||
-			!guild.join_message) return;
+		if (!guild?.plugins.includes('Saluter') || !guild.join_message) return;
 
 		member.guild.channels
-			.fetch(guild.salutes_channel)
+			.fetch(guild.join_message.channel)
 			.then((channel: TextChannel) =>
-				channel.send(guild.join_message
+				channel.send(guild.join_message.content
 					.replaceAll('{user}', member.toString())
 					.replaceAll('{server}', member.guild.name)))
 			.catch(() => {});

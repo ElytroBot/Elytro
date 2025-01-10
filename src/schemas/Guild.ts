@@ -22,9 +22,14 @@ const GuildSchema = new Schema({
 	plugins: [String],
 	leveling_channel: String,
 	leveling_message: String,
-	salutes_channel: String,
-	join_message: String,
-	leave_message: String,
+	join_message: {
+		channel: String,
+		content: String
+	},
+	leave_message: {
+		channel: String,
+		content: String
+	},
 	ticket_channel: String,
 	ticket_logs_channel: String
 }, { versionKey: false });
