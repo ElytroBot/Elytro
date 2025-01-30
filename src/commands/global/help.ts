@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { ApplicationCommandOptionBase, ApplicationIntegrationType, EmbedBuilder, InteractionContextType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import fs from 'fs';
@@ -30,8 +29,8 @@ module.exports = {
 
 			const folderPath = path.join(path.join(__dirname, '..'), folder);
 		
-			fs.readdirSync(folderPath).forEach(file => {
-				const data = (require(path.join(folderPath, file)) as Command).data;
+			fs.readdirSync(folderPath).forEach(async file => {
+				const data = (await import(path.join(folderPath, file)) as Command).data;
 
 				if (!(data instanceof SlashCommandBuilder)) return;
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { ActivityType, Client, Routes } from 'discord.js';
 import { Listener } from '../structure/Listener';
 import fs from 'fs';
@@ -12,9 +11,9 @@ module.exports = {
 			const commands = [];
 
 			fs.readdirSync(path.join(__dirname, '..', 'commands', 'global'))
-				.forEach(file =>
+				.forEach(async file =>
 					commands.push(
-						require(path.join(__dirname, '..', 'commands', 'global', file)).data
+						(await import(path.join(__dirname, '..', 'commands', 'global', file))).data
 					)
 				);
 

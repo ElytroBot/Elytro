@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { Guild, Routes } from 'discord.js';
 import { Listener } from '../structure/Listener';
 import { GuildModel } from '../schemas/Guild';
@@ -22,8 +21,8 @@ module.exports = {
             
 			if (!fs.existsSync(pluginPath)) return;
 
-			fs.readdirSync(pluginPath).forEach(file => {
-				const command = require(path.join(pluginPath, file));
+			fs.readdirSync(pluginPath).forEach(async file => {
+				const command = await import (path.join(pluginPath, file));
 				guild.commands.create(command.data);
 			});
 		});

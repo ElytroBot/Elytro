@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { Client, GatewayIntentBits, REST } from 'discord.js';
 import { config } from 'dotenv';
 import path from 'node:path';
@@ -35,15 +34,15 @@ client.commands = []; // Initializes the client's commands
 fs.readdirSync(path.join(__dirname, 'commands')).forEach(folder => {
 	const folderPath = path.join(path.join(__dirname, 'commands'), folder);
 
-	fs.readdirSync(folderPath).forEach(file => {
-		const command = require(path.join(folderPath, file));
+	fs.readdirSync(folderPath).forEach(async file => {
+		const command = await import(path.join(folderPath, file));
 		client.commands.push(command);
 	});
 });
 
 // Loads the events
-fs.readdirSync(path.join(__dirname, 'events')).forEach(file => {
-	const event = require(path.join(path.join(__dirname, 'events'), file));
+fs.readdirSync(path.join(__dirname, 'events')).forEach(async file => {
+	const event = await import(path.join(path.join(__dirname, 'events'), file));
 
 	if (event.once) client.once(file.split(/\./g)[0], event.execute);
 	else client.on(file.split(/\./g)[0], event.execute);

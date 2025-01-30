@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel } from '../../schemas/Guild';
@@ -60,8 +59,8 @@ module.exports = {
 		}
 		else {
 			if (fs.existsSync(path.join(__dirname, '..', pluginName))) {
-				fs.readdirSync(path.join(__dirname, '..', pluginName)).forEach(file => {
-					const command = require(path.join(__dirname, '..', pluginName, file));
+				fs.readdirSync(path.join(__dirname, '..', pluginName)).forEach(async file => {
+					const command = await import(path.join(__dirname, '..', pluginName, file));
 					interaction.guild.commands.create(command.data);
 				});
 			}
