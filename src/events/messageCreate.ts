@@ -34,15 +34,22 @@ module.exports = {
 		const xp = guild.xp.get(message.author.id) as number ?? 0;
 		const bonus = Math.round(Math.random() * 20 + 10);
 
-		if (xp + bonus >= getXP(getLevel(xp) + 1) && guild.leveling_message) {
-			const channel = guild.leveling_channel?
-				await message.guild.channels.fetch(guild.leveling_channel) as TextChannel :
-				message.channel as TextChannel;
+		if (xp + bonus >= getXP(getLevel(xp) + 1)) {
+			guild.leveling_rewards?.forEach(async reward => {
+				if (getLevel(xp + bonus) >= reward.level)
+					message.member.roles.add(await message.guild.roles.fetch(reward.role))
+						.catch(() => {});
+			});
 
-			channel.send(guild.leveling_message
-				.replaceAll('{user}', message.author.toString())
-				.replaceAll('{level}', getLevel(xp + bonus).toLocaleString())
-			).catch(() => {});
+			if (!guild.leveling_message?.channel) return;
+
+			await message.guild.channels
+				.fetch(guild.leveling_message.channel)
+				.then((channel: TextChannel) =>
+					channel.send(guild.leveling_message.content
+						.replaceAll('{user}', message.author.toString())
+						.replaceAll('{level}', getLevel(xp + bonus).toLocaleString())))
+				.catch(() => {});
 		}
 
 		guild.xp.set(message.author.id, xp + bonus);
