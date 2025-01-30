@@ -102,7 +102,7 @@ module.exports = {
 					]
 				})
 			]
-		}).catch();
+		}).catch(() => {});
 
 		guild.warns.push({ user_id: userId, reason: reason });
 		guild.save();

@@ -131,7 +131,7 @@ module.exports = {
 									] as Array<{ name: string; value: string }>
 								})
 							]
-						}).catch();
+						}).catch(() => {});
 		
 						guild.warns.push({ user_id: user.id, reason: reason });
 						guild.save();

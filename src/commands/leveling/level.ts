@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel, getLevel, getXP } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -46,15 +46,14 @@ module.exports = {
 					files: [
 						{
 							attachment: await LevelCard.from({
-								background: dbUser.background,
-								avatar: user.avatarURL({ extension: 'png' }),
-								name: member.displayName,
-								accent: dbUser.accent,
+								user: user,
+								background: dbUser?.background,
+								accent: dbUser?.accent,
 								xp: xp - getXP(level),
 								neededXP: getXP(level + 1) - getXP(level),
 								rank: rank,
 								level: level
-							}).catch(e => console.log(e)) as Buffer
+							})
 						}
 					]
 				});
@@ -74,9 +73,8 @@ module.exports = {
 } satisfies Command;
 
 interface CardOptions {
+	user: User;
 	background?: string;
-	avatar: string;
-	name: string;
 	accent?: string;
 	xp: number;
 	neededXP: number;
@@ -89,8 +87,10 @@ class LevelCard {
 		const background = options.background?
 			Buffer.from(await fetch(options.background).then(res => res.arrayBuffer())).toString('base64') :
 			null;
-		const avatar = Buffer.from(await fetch(options.avatar).then(res => res.arrayBuffer()))
-			.toString('base64');
+		const avatar = Buffer.from(
+			await fetch(options.user.avatarURL({ extension: 'png' }) ?? `https://cdn.discordapp.com/embed/avatars/${(BigInt(options.user.id) >> 22n) % 6n}.png`)
+				.then(res => res.arrayBuffer())
+		).toString('base64');
 		const formatter = Intl.NumberFormat('en', { notation: 'compact' });
 
 		const svg = `
@@ -108,7 +108,7 @@ class LevelCard {
 				<image href="data:image/png;base64,${avatar}" x="25" y="25" width="100" height="100" clip-path="url(#avatar)" />
 				<rect x="135" y="90" width="385" height="20" rx="10" fill="white" />
 				<rect x="0" y="90" width="${(options.xp / options.neededXP) * 385 + 135}" height="20" rx="10" fill="${options.accent ?? '#04a0fb'}" clip-path="url(#progress-bar)" />
-				<text x="135" y="80" font-family="Geist, sans-serif" font-size="25" fill="#ffffff">${options.name}</text>
+				<text x="135" y="80" font-family="Geist, sans-serif" font-size="25" fill="#ffffff">${options.user.displayName}</text>
 				<text x="520" y="80" font-family="Geist, sans-serif" font-size="15" fill="#ffffff" text-anchor="end">
 					${formatter.format(options.xp)} / ${formatter.format(options.neededXP)}
 				</text>
