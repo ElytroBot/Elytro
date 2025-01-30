@@ -1,11 +1,41 @@
 import { model, Schema } from 'mongoose';
 
 const WarnSchema = new Schema({
+	_id: {
+		type: String,
+		required: true
+	},
 	user_id: {
 		type: String,
 		required: true
 	},
 	reason: String
+});
+
+const LevelingRewardSchema = new Schema({
+	level: {
+		type: Number,
+		required: true
+	},
+	role: {
+		type: String,
+		required: true
+	}
+}, { _id: false });
+
+const TicketingPanel = new Schema({
+	channel: {
+		type: String,
+		required: true
+	},
+	message: {
+		type: String,
+		required: true
+	},
+	transcripts_channel: {
+		type: String,
+		required: true
+	}
 }, { _id: false });
 
 const GuildSchema = new Schema({
@@ -13,15 +43,18 @@ const GuildSchema = new Schema({
 		type: String,
 		required: true
 	},
+	plugins: [String],
 	warns: [WarnSchema],
 	xp: {
 		type: Map,
 		of: Number,
 		default: new Map()
 	},
-	plugins: [String],
-	leveling_channel: String,
-	leveling_message: String,
+	leveling_message: {
+		channel: String,
+		content: String
+	},
+	leveling_rewards: [LevelingRewardSchema],
 	join_message: {
 		channel: String,
 		content: String
@@ -30,6 +63,7 @@ const GuildSchema = new Schema({
 		channel: String,
 		content: String
 	},
+	ticketing_panels: [TicketingPanel],
 	ticket_channel: String,
 	ticket_logs_channel: String
 }, { versionKey: false });

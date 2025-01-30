@@ -10,12 +10,12 @@ const UserSchema = new Schema({
 		type: String,
 		required: true
 	},
+	reminders: [ReminderSchema],
 	cooldowns: {
 		type: Map,
 		of: Number,
 		default: new Map()
 	},
-	reminders: [ReminderSchema],
 	balance: {
 		type: Number,
 		default: 0
