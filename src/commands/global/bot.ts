@@ -47,7 +47,7 @@ module.exports = {
 				new ActionRowBuilder<ButtonBuilder>().addComponents(
 					Button.link({
 						label: 'Invite',
-						url: 'https://discord.com/oauth2/authorize?client_id=904730769929429072&permissions=8&scope=bot'
+						url: 'https://discord.com/oauth2/authorize?client_id=904730769929429072'
 					}),
 					Button.link({
 						label: 'Vote',
