@@ -2,6 +2,7 @@ import { ActivityType, Client, Routes } from 'discord.js';
 import { Listener } from '../structure/Listener';
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 
 module.exports = {
 	once: true,
@@ -10,12 +11,11 @@ module.exports = {
 		if (process.env.NODE_ENV == 'production') {
 			const commands = [];
 
-			fs.readdirSync(path.join(__dirname, '..', 'commands', 'global'))
-				.forEach(async file =>
-					commands.push(
-						(await import(path.join(__dirname, '..', 'commands', 'global', file))).data
-					)
+			for (const file of fs.readdirSync(path.resolve('src', 'commands', 'global'))) {
+				commands.push(
+					(await import(pathToFileURL(path.resolve('src', 'commands', 'global', file)).href)).default.data
 				);
+			}
 
 			// Registers the global commands
 			client.rest.put(

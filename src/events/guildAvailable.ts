@@ -3,6 +3,7 @@ import { Listener } from '../structure/Listener';
 import { GuildModel } from '../schemas/Guild';
 import path from 'path';
 import fs from 'node:fs';
+import { pathToFileURL } from 'node:url';
 
 module.exports = {
 	async execute(guild: Guild) {
@@ -16,15 +17,16 @@ module.exports = {
 		const dbGuild = await GuildModel.findById(guild.id);
 		if (!dbGuild) return;
 
-		dbGuild.plugins.forEach(name => {
-			const pluginPath = path.join(__dirname, '..', 'commands', name);
+		for (const plugin of dbGuild.plugins) {
+			const pluginPath = path.resolve('src', 'commands', plugin);
             
 			if (!fs.existsSync(pluginPath)) return;
 
-			fs.readdirSync(pluginPath).forEach(async file => {
-				const command = await import (path.join(pluginPath, file));
-				guild.commands.create(command.data);
-			});
-		});
+			for (const file of fs.readdirSync(pluginPath)) {
+				guild.commands.create(
+					(await import(pathToFileURL(path.join(pluginPath, file)).href)).default.data
+				);
+			}
+		}
 	}
 } satisfies Listener;

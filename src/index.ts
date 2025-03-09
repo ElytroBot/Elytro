@@ -4,6 +4,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { Command } from './structure/Command';
 import mongoose from 'mongoose';
+import { pathToFileURL } from 'node:url';
 
 // Catches any uncaught exceptions
 process.on('uncaughtException',
@@ -31,22 +32,21 @@ client.rest = new REST(); // Creates a REST client
 client.commands = []; // Initializes the client's commands
 
 // Loads the commands
-fs.readdirSync(path.join(__dirname, 'commands')).forEach(folder => {
-	const folderPath = path.join(path.join(__dirname, 'commands'), folder);
+for (const folder of fs.readdirSync(path.resolve('src', 'commands'))) {
+	const folderPath = path.resolve('src', 'commands', folder);
 
-	fs.readdirSync(folderPath).forEach(async file => {
-		const command = await import(path.join(folderPath, file));
-		client.commands.push(command);
-	});
-});
+	for (const file of fs.readdirSync(folderPath)) {
+		client.commands.push((await import(pathToFileURL(path.join(folderPath, file)).href)).default);
+	}
+}
 
 // Loads the events
-fs.readdirSync(path.join(__dirname, 'events')).forEach(async file => {
-	const event = await import(path.join(path.join(__dirname, 'events'), file));
+for (const file of fs.readdirSync(path.resolve('src', 'events'))) {
+	const event = await import(pathToFileURL(path.join('src', 'events', file)).href);
 
-	if (event.once) client.once(file.split(/\./g)[0], event.execute);
-	else client.on(file.split(/\./g)[0], event.execute);
-});
+	if (event.default.once) client.once(file.split(/\./g)[0], event.default.execute);
+	else client.on(file.split(/\./g)[0], event.default.execute);
+}
 
 // Starts the bot and REST client
 client.login(process.env.TOKEN);

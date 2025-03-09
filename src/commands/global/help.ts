@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { GuildModel } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
+import { pathToFileURL } from 'url';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -24,15 +25,15 @@ module.exports = {
 		const folders = ['global', ...(dbGuild? dbGuild.plugins : [])];
 		let description = '';
 
-		fs.readdirSync(path.join(__dirname, '..')).forEach(folder => {
-			if (!folders.includes(folder)) return;
+		for (const folder of fs.readdirSync(path.resolve('src', 'commands'))) {
+			if (!folders.includes(folder)) continue;
 
-			const folderPath = path.join(path.join(__dirname, '..'), folder);
-		
-			fs.readdirSync(folderPath).forEach(async file => {
-				const data = (await import(path.join(folderPath, file)) as Command).data;
+			const folderPath = path.resolve('src', 'commands', folder);
 
-				if (!(data instanceof SlashCommandBuilder)) return;
+			for (const file of fs.readdirSync(folderPath)) {
+				const data = (await import(pathToFileURL(path.join(folderPath, file)).href)).default.data;
+
+				if (!(data instanceof SlashCommandBuilder)) continue;
 
 				if (data.options.every(option => !(option instanceof SlashCommandSubcommandBuilder))) {
 					description += `\`/${data.name}${data.options.map(subcommandOption => ` ${stringifyOption(subcommandOption as ApplicationCommandOptionBase)}`).join('')}\`: ${data.description}\n`;
@@ -42,8 +43,8 @@ module.exports = {
 						description += `\`/${data.name} ${stringifyOption(option as ApplicationCommandOptionBase)}\n`;
 					}
 				}
-			});
-		});
+			}
+		}
 
 		interaction.reply({
 			embeds: [

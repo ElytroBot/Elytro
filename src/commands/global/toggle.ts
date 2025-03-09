@@ -4,6 +4,7 @@ import { GuildModel } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -32,10 +33,10 @@ module.exports = {
 			await GuildModel.create({ _id: interaction.guild.id });
 
 		if (guild.plugins.includes(pluginName)) {
-			if (fs.existsSync(path.join(__dirname, '..', pluginName))) {
+			if (fs.existsSync(path.resolve('src', 'commands', pluginName))) {
 				const commandNames = [];
 
-				fs.readdirSync(path.join(__dirname, '..', pluginName)).forEach(file =>
+				fs.readdirSync(path.resolve('src', 'commands', pluginName)).forEach(file =>
 					commandNames.push(file.split('.')[0]));
 
 				(await interaction.guild.commands.fetch()).forEach(command => {
@@ -58,11 +59,12 @@ module.exports = {
 			});
 		}
 		else {
-			if (fs.existsSync(path.join(__dirname, '..', pluginName))) {
-				fs.readdirSync(path.join(__dirname, '..', pluginName)).forEach(async file => {
-					const command = await import(path.join(__dirname, '..', pluginName, file));
-					interaction.guild.commands.create(command.data);
-				});
+			if (fs.existsSync(path.resolve('src', 'commands', pluginName))) {
+				for (const file of fs.readdirSync(path.resolve('src', 'commands', pluginName))) {
+					interaction.guild.commands.create(
+						(await import(pathToFileURL(path.resolve('src', 'commands', pluginName, file)).href)).default.data
+					);
+				}
 			}
 
 			guild.plugins.push(pluginName);
