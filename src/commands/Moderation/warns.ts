@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -33,17 +33,17 @@ module.exports = {
 					new SlashCommandStringOption()
 						.setName('reason')
 						.setDescription('The reason for the warning.')
+						.setMaxLength(50)
 				)
 		)
 		.addSubcommand(
 			new SlashCommandSubcommandBuilder()
 				.setName('delete')
 				.setDescription('Deletes a warning.')
-				.addIntegerOption(
-					new SlashCommandIntegerOption()
+				.addStringOption(
+					new SlashCommandStringOption()
 						.setName('id')
 						.setDescription('The ID of the warning.')
-						.setMinValue(0)
 						.setRequired(true)
 				)
 		),
@@ -56,14 +56,14 @@ module.exports = {
 			case 'view':
 				const embed = new EmbedBuilder({ color: EmbedColor.primary, title: 'Warns' });
 
-				guild.warns.forEach((warn, i) => {
+				guild.warns.forEach(warn => {
 					if (warn.user_id == user.id) {
 						embed.addFields(
 							{ name: '\u200b', value: '\u200b' },
-							{ name: 'ID', value: i.toString(), inline: true },
+							{ name: 'ID', value: warn.id, inline: true },
 							{
 								name: 'Reason',
-								value: warn.reason ? warn.reason : '`NONE`',
+								value: warn.reason ?? '`NONE`',
 								inline: true
 							}
 						);
@@ -128,7 +128,7 @@ module.exports = {
 									fields: [
 										... reason? [{ name: 'Reason', value: reason }] : [],
 										{ name: 'Server', value: interaction.guild.toString() }
-									] as Array<{ name: string; value: string }>
+									]
 								})
 							]
 						}).catch(() => {});
@@ -150,9 +150,10 @@ module.exports = {
 				return;
 
 			case 'delete':
-				const id = interaction.options.getInteger('id');
+				const id = interaction.options.getString('id');
+				const index = guild.warns.findIndex(w => w.id == id);
 
-				if (!guild.warns[id]) {
+				if (index == -1) {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
@@ -171,16 +172,16 @@ module.exports = {
 							color: EmbedColor.primary,
 							title: 'Warning Deleted',
 							fields: [
-								{ name: 'ID', value: id.toString() },
-								{ name: 'User', value: `<@${guild.warns[id].user_id}>` },
-								... guild.warns[id].reason?
+								{ name: 'ID', value: id },
+								{ name: 'User', value: `<@${guild.warns[index].user_id}>` },
+								... guild.warns[index].reason?
 									[{ name: 'Reason', value: guild.warns[id].reason }] : []
 							]
 						})
 					]
 				});
 
-				guild.warns.splice(id, 1);
+				guild.warns.splice(index, 1);
 				guild.save();
 		}
 	}
