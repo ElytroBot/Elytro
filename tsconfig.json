@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "ES2022",
 		"target": "ES2022",
 		"esModuleInterop": true,
-		"allowImportingTsExtensions": true,
 		"noEmit": true,
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
+		"moduleResolution": "bundler"
 	},
 	"include": ["src", "environment.d.ts"],
 	"exclude": ["node_modules"]
