@@ -14,5 +14,21 @@
 	{
 		"name": "Shovel",
 		"price": 10000
+	},
+	{
+		"name": "Pickaxe",
+		"price": 15000
+	},
+	{
+		"name": "Can",
+		"price": 625
+	},
+	{
+		"name": "Water Bottle",
+		"price": 500
+	},
+	{
+		"name": "Box of Screws",
+		"price": 900
 	}
 ]
