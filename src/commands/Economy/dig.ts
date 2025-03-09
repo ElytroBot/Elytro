@@ -13,12 +13,12 @@ module.exports = {
 	async onCommandInteraction(interaction) {
 		const user = await UserModel.findById(interaction.user.id);
 
-		if (!user || user.inventory.get('Shovel') == 0) {
+		if (!(user?.inventory?.get('Shovel') > 0)) {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
 						color: EmbedColor.danger,
-						description: 'You need a shovel in order to dig! Try using the shop to buy one.'
+						description: `You need a **${emojis.Shovel} Shovel** in order to dig! Try using \`/shop buy\` to buy one.`
 					})
 				],
 				ephemeral: true
@@ -43,7 +43,7 @@ module.exports = {
 
 		const random = Math.round(Math.random() * 100);
 
-		if (random < 3) {
+		if (random < 5) {
 			const money = Math.round(Math.random() * 10000 + 20000);
 
 			interaction.reply({

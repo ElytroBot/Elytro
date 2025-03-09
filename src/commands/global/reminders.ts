@@ -79,7 +79,7 @@ module.exports = {
 				interaction.reply({ embeds: [embed.spliceFields(0, 1)] });
 				return;
 
-			case 'add':
+			case 'add': {
 				const time = interaction.options.getString('time');
 				const seconds = parseTimeString(time);
 
@@ -109,7 +109,12 @@ module.exports = {
 				}
 
 				const now = Math.floor(Date.now() / 1000);
-				const addReminder = { _id: base64(Date.now()), expiration: now + seconds };
+				const reminder = {
+					_id: Date.now()
+						.toString(36)
+						.toUpperCase(),
+					expiration: now + seconds
+				};
 
 				interaction.reply({
 					embeds: [
@@ -122,12 +127,12 @@ module.exports = {
 					ephemeral: true
 				});
 
-				user.reminders.push(addReminder);
+				user.reminders.push(reminder);
 				user.save();
 
 				setTimeout(async () => {
 					if ((await UserModel.findById(interaction.user.id)).reminders
-						.findIndex(r => r._id == addReminder._id) == -1) return;
+						.findIndex(r => r._id == reminder._id) == -1) return;
 
 					interaction.user.send({
 						embeds: [
@@ -141,11 +146,11 @@ module.exports = {
 							new ActionRowBuilder<ButtonBuilder>()
 								.addComponents(
 									Button.primary({
-										custom_id: `reminders|dismiss|${addReminder._id}`,
+										custom_id: `reminders|dismiss|${reminder._id}`,
 										label: 'Dismiss'
 									}),
 									Button.secondary({
-										custom_id: `reminders|snooze|${addReminder._id}`,
+										custom_id: `reminders|snooze|${reminder._id}`,
 										label: 'Snooze'
 									})
 								)
@@ -153,12 +158,13 @@ module.exports = {
 					});
 				}, seconds * 1000);
 				return;
-
-			case 'remove':
+			}
+			
+			case 'remove': {
 				const id = interaction.options.getString('id');
-				const removeReminder = user.reminders.find(reminder => reminder._id == id);
+				const reminder = user.reminders.find(reminder => reminder._id == id);
 
-				if (!removeReminder) {
+				if (!reminder) {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
@@ -177,16 +183,17 @@ module.exports = {
 							color: EmbedColor.success,
 							title: 'Reminder Removed',
 							fields: [
-								{ name: 'ID', value: removeReminder._id },
-								{ name: 'Expiration', value: `<t:${removeReminder.expiration}:R>` }
+								{ name: 'ID', value: reminder._id },
+								{ name: 'Expiration', value: `<t:${reminder.expiration}:R>` }
 							]
 						})
 					],
 					ephemeral: true
 				});
 
-				user.reminders.splice(user.reminders.indexOf(removeReminder), 1);
+				user.reminders.splice(user.reminders.indexOf(reminder), 1);
 				user.save();
+			}
 		}
 	},
 
@@ -286,25 +293,12 @@ function parseTimeString(timeString: string): number | null {
 	const match = timeString.match(/(\d+)([hms])/);
 	if (!match) return null;
 
-	const value = parseInt(match[1]);
+	const value = Number(match[1]);
 	const unit = match[2];
 
 	switch (unit) {
-		case 'h': return value * 60 * 60;
+		case 'h': return value * 3600;
 		case 'm': return value * 60;
 		case 's': return value;
-		default: return null;
 	}
-}
-
-function base64(num: number) {
-	const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+,';
-	let encoded = '';
-
-	while (num > 0) {
-		encoded = alphabet[num % 64] + encoded;
-		num = Math.floor(num / 64);
-	}
-
-	return encoded;
 }

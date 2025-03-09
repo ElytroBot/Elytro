@@ -22,12 +22,7 @@ module.exports = {
 					new SlashCommandStringOption()
 						.setName('item')
 						.setDescription('The item you want to buy.')
-						.addChoices(
-							{ name: 'Lock', value: 'Lock' },
-							{ name: 'Lockpick', value: 'Lockpick' },
-							{ name: 'Security Camera', value: 'Security Camera' },
-							{ name: 'Shovel', value: 'Shovel' }
-						)
+						.addChoices(shop.map(item => ({ name: item.name, value: item.name })))
 						.setRequired(true)
 				)
 				.addIntegerOption(
@@ -58,7 +53,7 @@ module.exports = {
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		switch (interaction.options.getSubcommand()) {
-			case 'view':
+			case 'view': {
 				let description = '';
 				shop.forEach(item =>
 					description += `**${emojis[item.name]} ${item.name}** - ${item.price.toLocaleString()} ${emojis.coin}\n`
@@ -74,14 +69,15 @@ module.exports = {
 					]
 				});
 				return;
+			}
 
-			case 'buy':
-				const buyItemName = interaction.options.getString('item');
-				const buyAmount = interaction.options.getInteger('amount', false) ?? 1;
-				const buyItem = shop.find(item => item.name == buyItemName);
-				const buyUser = await UserModel.findById(interaction.user.id);
+			case 'buy': {
+				const itemName = interaction.options.getString('item');
+				const amount = interaction.options.getInteger('amount', false) ?? 1;
+				const item = shop.find(item => item.name == itemName);
+				const user = await UserModel.findById(interaction.user.id);
 
-				if (!buyUser || buyItem.price * buyAmount > buyUser.balance) {
+				if (!user || item.price * amount > user.balance) {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
@@ -99,25 +95,26 @@ module.exports = {
 						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Buy',
-							description: `You bought **${buyAmount}x ${emojis[buyItemName]} ${buyItemName}**!`
+							description: `You bought **${amount}x ${emojis[itemName]} ${itemName}**!`
 						})
 					]
 				});
 
-				buyUser.inventory.set(
-					buyItemName,
-					(buyUser.inventory.get(buyItemName) ?? 0) + buyAmount
+				user.inventory.set(
+					itemName,
+					(user.inventory.get(itemName) ?? 0) + amount
 				);
-				buyUser.balance -= buyItem.price * buyAmount;
-				buyUser.save();
+				user.balance -= item.price * amount;
+				user.save();
 				return;
+			}
 
-			case 'sell':
-				const sellItem = interaction.options.getString('item');
-				const sellAmount = interaction.options.getInteger('amount', false) ?? 1;
-				const sellUser = await UserModel.findById(interaction.user.id);
+			case 'sell': {
+				const itemName = interaction.options.getString('item');
+				const amount = interaction.options.getInteger('amount', false) ?? 1;
+				const user = await UserModel.findById(interaction.user.id);
 
-				if (!sellUser || (sellUser.inventory.get(sellItem) ?? 0) < sellAmount) {
+				if (!user || (user.inventory.get(itemName) ?? 0) < amount) {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
@@ -130,26 +127,25 @@ module.exports = {
 					return;
 				}
 
-				const sellPrice = Math.floor(
-					shop.find(item => item.name == sellItem).price * 0.75 * sellAmount
-				);
+				const sellPrice = Math.floor(shop.find(e => e.name == itemName).price * 0.8 * amount);
 
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Sell',
-							description: `You sold **${sellAmount}x ${emojis[sellItem]} ${sellItem}** for ${sellPrice.toLocaleString()} ${emojis.coin}!`
+							description: `You sold **${amount}x ${emojis[itemName]} ${itemName}** for ${sellPrice.toLocaleString()} ${emojis.coin}!`
 						})
 					]
 				});
 
-				sellUser.inventory.set(
-					sellItem,
-					sellUser.inventory.get(sellItem) - sellAmount
+				user.inventory.set(
+					itemName,
+					user.inventory.get(itemName) - amount
 				);
-				sellUser.balance += sellPrice;
-				sellUser.save();
+				user.balance += sellPrice;
+				user.save();
+			}
 		}
 	},
 

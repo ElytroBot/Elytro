@@ -35,10 +35,9 @@ module.exports = {
 		const bonus = Math.round(Math.random() * 20 + 10);
 
 		if (xp + bonus >= getXP(getLevel(xp) + 1)) {
-			guild.leveling_rewards?.forEach(async reward => {
+			guild.leveling_rewards?.forEach(reward => {
 				if (getLevel(xp + bonus) >= reward.level)
-					message.member.roles.add(await message.guild.roles.fetch(reward.role))
-						.catch(() => {});
+					message.member.roles.add(reward.role).catch(() => {});
 			});
 
 			if (!guild.leveling_message?.channel) return;
