@@ -33,7 +33,7 @@ const UserSchema = new Schema({
 export const UserModel = model<UserDocument>('User', UserSchema);
 
 export interface UserDocument {
-	_id: string;
+	_id: string | null;
 	cooldowns: Map<string, number>;
 	reminders: { _id: string, expiration: number }[];
 	balance: number;

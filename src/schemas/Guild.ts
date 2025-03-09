@@ -3,7 +3,10 @@ import { model, Schema } from 'mongoose';
 const WarnSchema = new Schema({
 	_id: {
 		type: String,
-		required: true
+		required: true,
+		default: () => Date.now()
+			.toString(36)
+			.toUpperCase()
 	},
 	user_id: {
 		type: String,
