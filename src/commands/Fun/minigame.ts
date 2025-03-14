@@ -21,7 +21,7 @@ module.exports = {
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		switch (interaction.options.getSubcommand()) {
-			case 'rps':
+			case 'rps': {
 				const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 					Button.primary({ custom_id: '0', emoji: '🪨' }),
 					Button.primary({ custom_id: '1', emoji: '📄' }),
@@ -39,22 +39,22 @@ module.exports = {
 					components: [row]
 				});
 				return;
+			}
 
-			case 'trivia':
+			case 'trivia': {
 				fetch('https://the-trivia-api.com/v2/questions?limit=1')
 					.then(res => res.json())
 					.then(json => {
 						const options = [json[0].correctAnswer, ...json[0].incorrectAnswers]
 							.sort(() => Math.random() - 0.5);
-						const optionsRow = new ActionRowBuilder<ButtonBuilder>();
+						const row = new ActionRowBuilder<ButtonBuilder>();
 
 						let formattedQuestion = json[0].question.text + '\n\n';
 						options.forEach((option, index) => {
-							const letter = String
-								.fromCharCode(index.toString().charCodeAt(0) + 17);
+							const letter = String.fromCharCode(index.toString().charCodeAt(0) + 17);
 			
 							formattedQuestion += `${letter}. ${option}\n`;
-							optionsRow.addComponents(
+							row.addComponents(
 								Button.primary({
 									custom_id: `${option}|${json[0].correctAnswer}`,
 									label: letter
@@ -71,7 +71,7 @@ module.exports = {
 									footer: { text: 'Powered by the-trivia-api.com' }
 								})
 							],
-							components: [optionsRow]
+							components: [row]
 						});
 					})
 					.catch(() => {
@@ -85,6 +85,7 @@ module.exports = {
 							ephemeral: true
 						});
 					});
+			}
 		}
 	},
 
@@ -116,8 +117,7 @@ module.exports = {
 							title: 'RPS',
 							description: message,
 							footer: {
-								text: outcome == 0? 'You Won' : 
-									outcome == 1? 'You Tied' : 'You Lost'
+								text: outcome == 0? 'You Won' : outcome == 1? 'You Tied' : 'You Lost'
 							}
 						})
 					],

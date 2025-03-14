@@ -1,6 +1,6 @@
 {
-	"rps": {
-		"0": [
+	"rps": [
+		[
 			"Wow, congrats on beating a robot. Truly a legendary achievement.",
 			"Hey, you finally won for once.",
 			"Too easy, huh? Sure, let’s pretend it wasn’t luck.",
@@ -8,7 +8,7 @@
 			"Victory! Too bad no one cares.",
 			"Enjoy this fleeting moment of glory. It won't last."
 		],
-		"1": [
+		[
 			"Ah, a tie. The suspense is killing no one.",
 			"Well that was anticlimactic.",
 			"What are the odds?",
@@ -16,7 +16,7 @@
 			"I guess you have to play again.",
 			"So, uh… now what? Flip a coin?"
 		],
-		"2": [
+		[
 			"Pro tip: if you stop playing, you’ll stop losing. Revolutionary advice, I know.",
 			"Maybe next time! Or, you know, maybe not.",
 			"Maybe next time.",
@@ -24,7 +24,7 @@
 			"And we have a winner! Not you though lol.",
 			"Is there an easy mode?"
 		]
-	},
+	],
 	"beg": {
 		"success": [
 			"Oh, you poor thing, here is {money}.",
