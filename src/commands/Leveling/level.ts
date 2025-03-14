@@ -1,9 +1,10 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
+import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel, getLevel, getXP } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
 import { UserModel } from '../../schemas/User';
 import sharp from 'sharp';
+import { Button } from '../../structure/Button';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -43,19 +44,21 @@ module.exports = {
 				dbGuild.xp.forEach(xp => xp > dbGuild.xp.get(user.id) && rank++);
 
 				interaction.reply({
-					files: [
-						{
-							attachment: await LevelCard.from({
-								user: user,
-								background: dbUser?.background,
-								accent: dbUser?.accent,
-								xp: xp - getXP(level),
-								neededXP: getXP(level + 1) - getXP(level),
-								rank: rank,
-								level: level
-							})
-						}
-					]
+					components: [
+						new ActionRowBuilder<Button>()
+							.addComponents(Button.link({ emoji: '✏️', label: 'Edit card', url: 'https://elytro-bot.vercel.app/dashboard' }))
+					],
+					files: [{
+						attachment: await LevelCard.from({
+							user: user,
+							background: dbUser?.background,
+							accent: dbUser?.accent,
+							xp: xp - getXP(level),
+							neededXP: getXP(level + 1) - getXP(level),
+							rank: rank,
+							level: level
+						})
+					}]
 				});
 			})
 			.catch(() => {
