@@ -1,10 +1,11 @@
-import { ApplicationCommandOptionBase, ApplicationIntegrationType, EmbedBuilder, InteractionContextType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandOptionBase, ApplicationIntegrationType, ButtonBuilder, EmbedBuilder, InteractionContextType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import fs from 'fs';
 import path from 'path';
 import { GuildModel } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
 import { pathToFileURL } from 'url';
+import { Button } from '../../structure/Button';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -53,6 +54,18 @@ module.exports = {
 					title: 'Help',
 					description: description
 				})
+			],
+			components: [
+				new ActionRowBuilder<ButtonBuilder>().addComponents(
+					Button.link({
+						label: 'Server',
+						url: 'https://discord.gg/KCY2RERtxk'
+					}),
+					Button.link({
+						label: 'Website',
+						url: 'https://elytro-bot.vercel.app'
+					})
+				)
 			],
 			ephemeral: true
 		});
