@@ -4,7 +4,7 @@
 
 # About
 
-Elytro is a fun and robust Discord bot that brings a bunch of cool features to your server. Whether you’re running a busy community, hanging out with friends, or looking to add some friendly competition, Elytro has you covered with it's wide range of plugins.
+Elytro is a fun and robust Discord bot that brings a bunch of cool features to your server. Whether you're running a busy community, hanging out with friends, or looking to add some friendly competition, Elytro has you covered with it's wide range of plugins.
 
 ## Plugins
 
