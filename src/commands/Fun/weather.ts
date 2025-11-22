@@ -35,7 +35,7 @@ module.exports = {
 				components: [getActionRow(location, units, 0)]
 			});
 		}
-		catch (error) {
+		catch {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
@@ -70,7 +70,7 @@ module.exports = {
 				components: [getActionRow(location, units, Number(index))]
 			});
 		}
-		catch (error) {
+		catch {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
