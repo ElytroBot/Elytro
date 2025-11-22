@@ -1,8 +1,14 @@
 import { model, Schema } from 'mongoose';
 
 const ReminderSchema = new Schema({
-	_id: String,
-	expiration: Number
+	_id: {
+		type: String,
+		required: true
+	},
+	expiration: {
+		type: Number,
+		required: true
+	}
 });
 
 const UserSchema = new Schema({
@@ -10,24 +16,40 @@ const UserSchema = new Schema({
 		type: String,
 		required: true
 	},
-	reminders: [ReminderSchema],
+	reminders: {
+		type: [ReminderSchema],
+		default: () => [],
+		required: true
+	},
 	cooldowns: {
 		type: Map,
 		of: Number,
-		default: new Map()
+		default: () => new Map(),
+		required: true
 	},
 	balance: {
 		type: Number,
-		default: 0
+		default: 0,
+		required: true
 	},
 	inventory: {
 		type: Map,
 		of: Number,
-		default: new Map()
+		default: () => new Map(),
+		required: true
 	},
-	afk_status: String,
-	background: String,
-	accent: String
+	afk_status: {
+		type: String,
+		default: null
+	},
+	background: {
+		type: String,
+		default: null
+	},
+	accent: {
+		type: String,
+		default: null
+	}
 }, { versionKey: false });
 
 export const UserModel = model<UserDocument>('User', UserSchema);

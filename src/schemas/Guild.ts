@@ -12,7 +12,10 @@ const WarnSchema = new Schema({
 		type: String,
 		required: true
 	},
-	reason: String
+	reason: {
+		type: String,
+		default: null
+	}
 });
 
 const LevelingRewardSchema = new Schema({
@@ -41,45 +44,68 @@ const TicketingPanel = new Schema({
 	}
 }, { _id: false });
 
+const MessageSchema = new Schema({
+	channel: {
+		type: String,
+		required: true
+	},
+	content: {
+		type: String,
+		required: true
+	}
+}, { _id: false });
+
 const GuildSchema = new Schema({
 	_id: {
 		type: String,
 		required: true
 	},
-	plugins: [String],
-	warns: [WarnSchema],
+	plugins: {
+		type: [String],
+		default: () => [],
+		required: true
+	},
+	warns: {
+		type: [WarnSchema],
+		default: () => [],
+		required: true
+	},
 	xp: {
 		type: Map,
 		of: Number,
-		default: new Map()
+		default: () => new Map(),
+		required: true
 	},
 	leveling_message: {
-		channel: String,
-		content: String
+		type: MessageSchema,
+		default: null
 	},
-	leveling_rewards: [LevelingRewardSchema],
+	leveling_rewards: {
+		type: [LevelingRewardSchema],
+		default: () => [],
+		required: true
+	},
 	join_message: {
-		channel: String,
-		content: String
+		type: MessageSchema,
+		default: null
 	},
 	leave_message: {
-		channel: String,
-		content: String
+		type: MessageSchema,
+		default: null
 	},
-	ticketing_panels: [TicketingPanel],
-	ticket_channel: String,
-	ticket_logs_channel: String
+	ticketing_panels: {
+		type: [TicketingPanel],
+		default: () => [],
+		required: true
+	}
 }, { versionKey: false });
 
 export const GuildModel = model('Guild', GuildSchema);
 
 export function getLevel(xp: number) {
-	for (let i = 0;; i++) {
-		if (xp < getXP(i + 1)) return i;
-	}
+	return Math.floor(Math.sqrt(xp / 50 + .25) - .5);
 }
 
 export function getXP(level: number) {
-	if (level == 0) return 0;
-	return level * 100 + getXP(level - 1);
+	return level * (level + 1) * 50;
 }
