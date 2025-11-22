@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { transfer, UserModel } from '../../schemas/User';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -33,7 +33,7 @@ module.exports = {
 						description: 'You cannot give money to a bot!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -46,7 +46,7 @@ module.exports = {
 						description: 'You cannot give money to yourself!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -62,7 +62,7 @@ module.exports = {
 						description: 'You do not have this much money!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}

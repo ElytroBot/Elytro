@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, AutocompleteInteraction, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, AutocompleteInteraction, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, EmbedBuilder, MessageFlags } from 'discord.js';
 import { Command } from '../../structure/Command';
 import shop from '../../json/shop.json';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -85,7 +85,7 @@ module.exports = {
 								description: 'You do not have enough money!'
 							})
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}
@@ -122,7 +122,7 @@ module.exports = {
 								description: 'You do not have enough items to sell!'
 							})
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}

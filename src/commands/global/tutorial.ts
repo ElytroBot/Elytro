@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
+import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { ActionRowBuilder, EmbedBuilder } from '@discordjs/builders';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -40,7 +40,7 @@ module.exports = {
 						description: 'You are not allowed to use this button!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -55,7 +55,7 @@ module.exports = {
 						description: 'Tutorial successfully completed!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}

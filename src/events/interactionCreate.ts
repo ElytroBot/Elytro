@@ -1,4 +1,4 @@
-import { EmbedBuilder, Interaction, RepliableInteraction } from 'discord.js';
+import { EmbedBuilder, Interaction, MessageFlags, RepliableInteraction } from 'discord.js';
 import { Listener } from '../structure/Listener';
 import { EmbedColor } from '../structure/EmbedColor';
 
@@ -22,7 +22,7 @@ module.exports = {
 							description: 'Do you like what your seeing? Don\'t forget to leave us a [review](https://top.gg/bot/904730769929429072#reviews).'
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 			else if (random == 1) {
@@ -35,7 +35,7 @@ module.exports = {
 							description: 'Support Elytro by [voting](https://top.gg/bot/904730769929429072/vote).'
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			}
 		}
@@ -85,7 +85,7 @@ function reportError(e: Error, interaction: RepliableInteraction) {
 				description: `An unknown error has occurred. You can report this error by using </report:1306353943042986016> or by joining our [Discord server](https://discord.gg/KCY2RERtxk).\`\`\`${e.message}\`\`\``
 			})
 		],
-		ephemeral: true
+		flags: MessageFlags.Ephemeral
 	});
 	console.error(`[${new Date().toISOString()}] ${e.stack}`);
 }

@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonComponent, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ActionRow, ActionRowBuilder, ButtonBuilder, ButtonComponent, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import outcomes from '../../json/outcomes.json';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -82,7 +82,7 @@ module.exports = {
 									description: 'It looks like there was an issue with our trivia API. Please try again later.'
 								})
 							],
-							ephemeral: true
+							flags: MessageFlags.Ephemeral
 						});
 					});
 			}
@@ -98,7 +98,7 @@ module.exports = {
 						description: 'You are not allowed to use this button!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -153,7 +153,7 @@ module.exports = {
 
 				const editedRow = new ActionRowBuilder<ButtonBuilder>();
 
-				interaction.message.components[0].components
+				(interaction.message.components[0] as ActionRow<ButtonComponent>).components
 					.forEach((button: ButtonComponent) => {
 						const segments = button.customId.split('|');
 

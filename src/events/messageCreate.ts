@@ -8,8 +8,15 @@ module.exports = {
 	async execute(message: Message) {
 		if (message.author.bot) return;
 
-		const mentioned = await UserModel
-			.find({ _id: { $in: Array.from(message.mentions.members.keys()) } });
+		const bonus = Math.round(Math.random() * 20 + 10);
+		const [mentioned, dbGuild] = await Promise.all([
+			UserModel.find({ _id: { $in: Array.from(message.mentions.members.keys()) } }),
+			GuildModel.findOneAndUpdate(
+				{ _id: message.guild.id, plugins: 'Leveling' },
+				{ $inc: { [`xp.${message.author.id}`]: bonus } },
+				{ new: true }
+			)
+		]);
 
 		for (const mention of mentioned) {
 			if (mention.afk_status) {
@@ -27,31 +34,23 @@ module.exports = {
 			}
 		}
 
-		const guild = await GuildModel.findById(message.guild.id);
-		
-		if (!guild?.plugins.includes('Leveling')) return;
+		if (!dbGuild) return;
 
-		const xp = guild.xp.get(message.author.id) as number ?? 0;
-		const bonus = Math.round(Math.random() * 20 + 10);
+		const xp = dbGuild.xp.get(message.author.id);
 
-		if (xp + bonus >= getXP(getLevel(xp) + 1)) {
-			guild.leveling_rewards?.forEach(reward => {
-				if (getLevel(xp + bonus) >= reward.level)
-					message.member.roles.add(reward.role).catch(() => {});
-			});
+		if (xp < getXP(getLevel(xp - bonus) + 1)) return;
 
-			if (!guild.leveling_message?.channel) return;
+		dbGuild.leveling_rewards.forEach(reward => {
+			if (getLevel(xp) >= reward.level)
+				message.member.roles.add(reward.role).catch(() => {});
+		});
 
-			await message.guild.channels
-				.fetch(guild.leveling_message.channel)
-				.then((channel: TextChannel) =>
-					channel.send(guild.leveling_message.content
-						.replaceAll('{user}', message.author.toString())
-						.replaceAll('{level}', getLevel(xp + bonus).toLocaleString())))
-				.catch(() => {});
-		}
-
-		guild.xp.set(message.author.id, xp + bonus);
-		guild.save();
+		await message.guild.channels
+			.fetch(dbGuild.leveling_message?.channel)
+			.then((channel: TextChannel) =>
+				channel.send(dbGuild.leveling_message.content
+					.replaceAll('{user}', message.author.toString())
+					.replaceAll('{level}', getLevel(xp).toLocaleString())))
+			.catch(() => {});
 	}
 } satisfies Listener;

@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 
@@ -28,7 +28,7 @@ module.exports = {
 								description: 'This user is not muted!'
 							})
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}
@@ -41,7 +41,7 @@ module.exports = {
 								description: 'I cannot unmute a user with a higher or equal role.'
 							})
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}
@@ -66,7 +66,7 @@ module.exports = {
 							description: 'Could not find this user in this server.'
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 				return;
 			});

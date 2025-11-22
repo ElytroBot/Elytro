@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
@@ -23,7 +23,7 @@ module.exports = {
 						description: `You are on cooldown! Come back <t:${user.cooldowns.get('beg')}:R>`
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}

@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
@@ -23,7 +23,7 @@ module.exports = {
 						description: `You are on cooldown! Come back <t:${dbUser.cooldowns.get('work')}:R>`
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -67,7 +67,7 @@ module.exports = {
 						description: 'You are not allowed to use this button!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}

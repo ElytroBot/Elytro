@@ -34,7 +34,7 @@ async function getEmbed(page: number, client: Client) {
 	let description = '';
 	for (const [index, dbUser] of dbUsers.entries()) {
 		if (index < (page - 1) * 10) continue;
-		const user = await client.users.fetch(dbUser.id);
+		const user = await client.users.fetch(dbUser._id);
 		description += `${index + 1}. \`\`${user.displayName}\`\` - ${dbUser.balance.toLocaleString()} ${emojis.coin}\n`;
 	}
 

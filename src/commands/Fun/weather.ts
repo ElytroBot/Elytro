@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ActionRowBuilder, MessageComponentInteraction, ButtonBuilder, SlashCommandStringOption, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, ActionRowBuilder, MessageComponentInteraction, ButtonBuilder, SlashCommandStringOption, ChatInputCommandInteraction, EmbedBuilder, MessageFlags } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
@@ -43,7 +43,7 @@ module.exports = {
 						description: 'Could not fetch weather data for this location.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 	},
@@ -57,7 +57,7 @@ module.exports = {
 						description: 'You are not allowed to use this button!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -78,7 +78,7 @@ module.exports = {
 						description: 'Could not fetch weather data for this location.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 	}

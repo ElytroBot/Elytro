@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandIntegerOption, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandIntegerOption, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 import { Button } from '../../structure/Button';
@@ -29,7 +29,7 @@ module.exports = {
 						description: 'Please finish your previous game of blackjack.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -41,7 +41,7 @@ module.exports = {
 						description: 'You cannot bet more money than you own.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -133,7 +133,7 @@ module.exports = {
 						description: 'You are not allowed to use this button!'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}

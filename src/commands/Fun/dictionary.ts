@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 
@@ -46,7 +46,7 @@ module.exports = {
 
 			await interaction.reply({
 				embeds: [errorEmbed],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 	}

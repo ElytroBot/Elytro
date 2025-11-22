@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 import emojis from '../../json/emojis.json';
@@ -83,7 +83,7 @@ module.exports = {
 							description: 'Could not find this user in this server.'
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			});
 	}

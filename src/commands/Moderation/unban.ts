@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 
@@ -23,7 +23,7 @@ module.exports = {
 		const user = interaction.options.getUser('user');
 		const reason = interaction.options.getString('reason', false);
 
-		interaction.guild.members
+		await interaction.guild.members
 			.unban(user, reason)
 			.then(() =>
 				interaction.reply({
@@ -47,7 +47,7 @@ module.exports = {
 							description: 'This user is not banned.'
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				})
 			);
 	}

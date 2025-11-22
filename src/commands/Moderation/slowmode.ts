@@ -23,13 +23,12 @@ module.exports = {
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction): Promise<void> {
-		const channel = interaction.options.getChannel('channel') as TextChannel ??
-			interaction.channel;
+		const channel = interaction.options.getChannel('channel') as TextChannel ?? interaction.channel;
 		const duration = interaction.options.getInteger('duration');
 
-		channel.setRateLimitPerUser(duration);
+		await channel.setRateLimitPerUser(duration);
 
-		interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
 					color: EmbedColor.success,

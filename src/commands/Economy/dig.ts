@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 import outcomes from '../../json/outcomes.json';
@@ -21,7 +21,7 @@ module.exports = {
 						description: `You need a **${emojis.Shovel} Shovel** in order to dig! Try using \`/shop buy\` to buy one.`
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -36,7 +36,7 @@ module.exports = {
 						description: `You are on cooldown! Come back <t:${user.cooldowns.get('dig')}:R>`
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}

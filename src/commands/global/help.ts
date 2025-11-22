@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandOptionBase, ApplicationIntegrationType, ButtonBuilder, EmbedBuilder, InteractionContextType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandOptionBase, ApplicationIntegrationType, ButtonBuilder, EmbedBuilder, InteractionContextType, MessageFlags, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import fs from 'fs';
 import path from 'path';
@@ -67,7 +67,7 @@ module.exports = {
 					})
 				)
 			],
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 } satisfies Command;

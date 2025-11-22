@@ -1,4 +1,4 @@
-import { ApplicationIntegrationType, ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, SlashCommandAttachmentOption, SlashCommandBuilder, SlashCommandStringOption, TextChannel } from 'discord.js';
+import { ApplicationIntegrationType, ChatInputCommandInteraction, ContainerBuilder, FileUploadBuilder, InteractionContextType, LabelBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder, MessageFlags, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextDisplayBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 
@@ -14,45 +14,61 @@ module.exports = {
 		.setIntegrationTypes(
 			ApplicationIntegrationType.GuildInstall,
 			ApplicationIntegrationType.UserInstall
-		)
-		.addStringOption(
-			new SlashCommandStringOption()
-				.setName('description')
-				.setDescription('The description of the bug.')
-				.setRequired(true)
-		)
-		.addAttachmentOption(
-			new SlashCommandAttachmentOption()
-				.setName('screenshot')
-				.setDescription('The screenshot of the bug.')
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		const channel = await (
-			await interaction.client.guilds.fetch('1176349182844485652')
-		).channels.fetch('1306349957393154068');
-		const screenshot = interaction.options.getAttachment('screenshot');
+		await interaction.showModal(
+			new ModalBuilder()
+				.setCustomId('report')
+				.setTitle('Bug Report')
+				.addLabelComponents(
+					new LabelBuilder()
+						.setLabel('Description')
+						.setDescription('Provide a description of the bug.')
+						.setTextInputComponent(
+							new TextInputBuilder()
+								.setCustomId('description')
+								.setStyle(TextInputStyle.Paragraph)
+								.setMaxLength(1000)
+						),
+					new LabelBuilder()
+						.setLabel('Screenshots')
+						.setDescription('Attach images of the bug.')
+						.setFileUploadComponent(
+							new FileUploadBuilder()
+								.setCustomId('screenshots')
+								.setMaxValues(5)
+						)
+				)
+		);
+	},
 
-		(channel as TextChannel).send({
-			embeds: [
-				new EmbedBuilder({
-					color: EmbedColor.danger,
-					title: 'Bug Report',
-					fields: [
-						{ name: 'Description', value: interaction.options.getString('description') },
-						...screenshot? [{ name: 'Screenshot', value: screenshot.url }] : []
-					],
-					footer: {
-						text: interaction.user.username,
-						iconURL: interaction.user.avatarURL()
-					}
-				})
-			]
-		});
+	async onModalSubmitInteraction(interaction: ModalSubmitInteraction) {
+		await interaction.client.guilds
+			.fetch('1176349182844485652')
+			.then(guild => guild.channels.fetch('1306349957393154068'))
+			.then((channel: TextChannel) => channel.send({
+				components: [
+					new ContainerBuilder()
+						.setAccentColor(EmbedColor.danger)
+						.addTextDisplayComponents(
+							new TextDisplayBuilder()
+								.setContent(`## Bug Report\n${interaction.fields.getTextInputValue('description')}`)
+						)
+						.addMediaGalleryComponents(
+							new MediaGalleryBuilder()
+								.addItems(
+									interaction.fields.resolved.attachments
+										.map(attachment => new MediaGalleryItemBuilder().setURL(attachment.url))
+								)
+						)
+				],
+				flags: MessageFlags.IsComponentsV2
+			}));
 
-		interaction.reply({
+		await interaction.reply({
 			content: 'Thank you for taking the time to report this bug! Our team is actively working on fixing the issue. For further assistance or updates, feel free to join our Discord community: https://discord.gg/CXSsdwhgwb.',
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 } satisfies Command;

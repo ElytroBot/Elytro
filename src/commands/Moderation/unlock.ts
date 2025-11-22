@@ -15,17 +15,16 @@ module.exports = {
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		const channel = (interaction.options.getChannel('channel') ??
-			interaction.channel) as TextChannel;
+		const channel = (interaction.options.getChannel('channel') ?? interaction.channel) as TextChannel;
 
-		channel.permissionOverwrites.edit(interaction.guild.roles.everyone.id, {
+		await channel.permissionOverwrites.edit(interaction.guild.roles.everyone.id, {
 			SendMessages: null,
 			SendMessagesInThreads: null,
 			CreatePublicThreads: null,
 			CreatePrivateThreads: null
 		});
 		
-		interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
 					color: EmbedColor.primary,

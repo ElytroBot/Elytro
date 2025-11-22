@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, ButtonInteraction, ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandStringOption, InteractionContextType, ApplicationIntegrationType, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, ButtonInteraction, ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandStringOption, InteractionContextType, ApplicationIntegrationType, EmbedBuilder, MessageFlags } from 'discord.js';
 import { EmbedColor } from '../../structure/EmbedColor';
 import { Button } from '../../structure/Button';
 import { UserModel } from '../../schemas/User';
@@ -57,7 +57,7 @@ module.exports = {
 								.setColor(EmbedColor.danger)
 								.setDescription('You have no reminders.')
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}
@@ -91,7 +91,7 @@ module.exports = {
 								description: 'Invalid time format. Use `h` for hours, `m` for minutes, and `s` for seconds.'
 							})
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}
@@ -103,7 +103,7 @@ module.exports = {
 								description: 'You have reached your limit of 5 simultaneous reminders.'
 							})
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}
@@ -124,7 +124,7 @@ module.exports = {
 							description: `Reminder successfully scheduled for <t:${now + seconds}:R>.`
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 				user.reminders.push(reminder);
@@ -172,7 +172,7 @@ module.exports = {
 								description: 'You do not have a reminder with that ID.'
 							})
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}
@@ -188,7 +188,7 @@ module.exports = {
 							]
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 
 				user.reminders.splice(user.reminders.indexOf(reminder), 1);
@@ -228,7 +228,7 @@ module.exports = {
 						description: 'Reminder not found.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 		}
 		else if (action == 'dismiss') {
@@ -239,7 +239,7 @@ module.exports = {
 						description: 'Reminder dismissed.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			user.reminders.splice(user.reminders.indexOf(reminder), 1);
 			user.save();
@@ -252,7 +252,7 @@ module.exports = {
 						description: 'Snoozed for 5m.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 
 			reminder.expiration = Math.floor((Date.now() + 300000) / 1000);

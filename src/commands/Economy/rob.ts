@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { transfer, UserDocument, UserModel } from '../../schemas/User';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -26,7 +26,7 @@ module.exports = {
 						description: 'You cannot rob yourself.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -39,7 +39,7 @@ module.exports = {
 						description: 'You cannot rob a bot.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -54,7 +54,7 @@ module.exports = {
 						description: `You need to have at least 10,000 ${emojis.coin} to rob someone.`
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -69,7 +69,7 @@ module.exports = {
 						description: `You cannot rob a user with less than 10,000 ${emojis.coin}`
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -84,7 +84,7 @@ module.exports = {
 						description: `You are on cooldown! Come back <t:${dbUser.cooldowns.get('rob')}:R>`
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}

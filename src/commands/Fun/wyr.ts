@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 
@@ -33,7 +33,7 @@ module.exports = {
 							description: 'It looks like there was an issue with our wyr API. Please try again later.'
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			});
 	}

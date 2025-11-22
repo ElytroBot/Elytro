@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption, EmbedBuilder, MessageFlags } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { UserModel } from '../../schemas/User';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -15,35 +15,17 @@ module.exports = {
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		const reason = interaction.options.getString('reason', false);
-		const user = await UserModel.findById(interaction.user.id);
 
-		if (!reason) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.success,
-						description: 'Afk status successfully removed!'
-					})
-				],
-				ephemeral: true
-			});
-	
-			user.afk_status = undefined;
-			user.save();
-			return;
-		}
-
-		interaction.reply({
+		await UserModel.findByIdAndUpdate(interaction.user.id, { afk_status: reason });
+		
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
 					color: EmbedColor.success,
 					description: 'Afk status successfully updated!'
 				})
 			],
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
-
-		user.afk_status = reason;
-		user.save();
 	}
 } satisfies Command;

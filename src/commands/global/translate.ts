@@ -1,4 +1,4 @@
-import { ApplicationCommandType, ApplicationIntegrationType, ContextMenuCommandBuilder, EmbedBuilder, InteractionContextType, MessageContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, ApplicationIntegrationType, ContextMenuCommandBuilder, EmbedBuilder, InteractionContextType, MessageContextMenuCommandInteraction, MessageFlags } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { load } from 'cheerio';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -25,7 +25,7 @@ module.exports = {
 						.setColor(EmbedColor.danger)
 						.setDescription('Cannot translate an empty message.')
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -34,7 +34,7 @@ module.exports = {
 
 		interaction.reply({
 			content: load(await res.text())('.result-container').text(),
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 } satisfies Command;

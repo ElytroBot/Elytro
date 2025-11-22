@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -60,7 +60,7 @@ module.exports = {
 					if (warn.user_id == user.id) {
 						embed.addFields(
 							{ name: '\u200b', value: '\u200b' },
-							{ name: 'ID', value: warn.id, inline: true },
+							{ name: 'ID', value: warn._id, inline: true },
 							{
 								name: 'Reason',
 								value: warn.reason ?? '`NONE`',
@@ -86,7 +86,7 @@ module.exports = {
 										description: 'I cannot warn myself!'
 									})
 								],
-								ephemeral: true
+								flags: MessageFlags.Ephemeral
 							});
 							return;
 						}
@@ -101,7 +101,7 @@ module.exports = {
 										description: 'You do not have a higher role than the target member.'
 									})
 								],
-								ephemeral: true
+								flags: MessageFlags.Ephemeral
 							});
 							return;
 						}
@@ -144,14 +144,14 @@ module.exports = {
 									description: 'Could not find this user in this server.'
 								})
 							],
-							ephemeral: true
+							flags: MessageFlags.Ephemeral
 						});
 					});
 				return;
 
 			case 'delete':
 				const id = interaction.options.getString('id');
-				const index = guild.warns.findIndex(w => w.id == id);
+				const index = guild.warns.findIndex(w => w._id == id);
 
 				if (index == -1) {
 					interaction.reply({
@@ -161,7 +161,7 @@ module.exports = {
 								description: 'User does not have a warning with this ID.'
 							})
 						],
-						ephemeral: true
+						flags: MessageFlags.Ephemeral
 					});
 					return;
 				}

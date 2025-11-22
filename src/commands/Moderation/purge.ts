@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 
@@ -19,8 +19,9 @@ module.exports = {
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		const amount = interaction.options.getInteger('amount');
 
-		interaction.channel.bulkDelete(amount, true);
-		interaction.reply({
+		await interaction.channel.bulkDelete(amount, true);
+		
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
 					color: EmbedColor.primary,
@@ -28,7 +29,7 @@ module.exports = {
 					fields: [{ name: 'Amount', value: amount.toString() }]
 				})
 			],
-			ephemeral: true
+			flags: MessageFlags.Ephemeral
 		});
 	}
 } satisfies Command;

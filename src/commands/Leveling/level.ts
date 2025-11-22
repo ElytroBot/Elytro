@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
+import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel, getLevel, getXP } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
@@ -28,7 +28,7 @@ module.exports = {
 						description: 'This user has no XP.'
 					})
 				],
-				ephemeral: true
+				flags: MessageFlags.Ephemeral
 			});
 			return;
 		}
@@ -69,7 +69,7 @@ module.exports = {
 							description: 'Could not find this user in this server.'
 						})
 					],
-					ephemeral: true
+					flags: MessageFlags.Ephemeral
 				});
 			});
 	}
