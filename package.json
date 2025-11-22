@@ -1,11 +1,11 @@
 {
   "name": "elytro",
   "version": "3.0.0",
-  "description": "The official Elytro discord bot.",
+  "description": "The official Elytro Discord bot.",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "set NODE_ENV=development&& npx tsx src/index.ts",
-    "prod": "set NODE_ENV=production&& npx tsx src/index.ts"
+    "dev": "NODE_ENV=development npx tsx src/index.ts",
+    "prod": "NODE_ENV=production npx tsx src/index.ts"
   },
   "keywords": [
     "Elytro",
@@ -13,17 +13,14 @@
   ],
   "author": "exceptionee",
   "license": "Attribution-NonCommercial-ShareAlike 4.0 International",
-  "overrides": {
-    "discord-api-types": "0.37.100"
-  },
-	"type": "module",
+  "type": "module",
   "dependencies": {
-    "cheerio": "^1.0.0",
-    "discord.js": "^14.16.3",
+    "cheerio": "^1.1.2",
+    "discord.js": "^14.25.1",
     "dotenv": "^16.3.1",
-    "mongoose": "^8.0.0",
-    "sharp": "^0.33.5",
-    "tsx": "^4.19.2"
+    "mongoose": "^9.0.0",
+    "sharp": "^0.34.5",
+    "tsx": "^4.20.6"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
