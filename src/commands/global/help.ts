@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import { GuildModel } from '../../schemas/Guild';
 import { EmbedColor } from '../../structure/EmbedColor';
-import { pathToFileURL } from 'url';
 import { Button } from '../../structure/Button';
 
 module.exports = {
@@ -32,7 +31,7 @@ module.exports = {
 			const folderPath = path.resolve('src', 'commands', folder);
 
 			for (const file of fs.readdirSync(folderPath)) {
-				const data = (await import(pathToFileURL(path.join(folderPath, file)).href)).default.data;
+				const data = (await import(`../${folder}/${file}`)).default.data;
 
 				if (!(data instanceof SlashCommandBuilder)) continue;
 

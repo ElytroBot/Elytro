@@ -4,7 +4,6 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { Command } from './structure/Command';
 import mongoose from 'mongoose';
-import { pathToFileURL } from 'node:url';
 
 // Catches any uncaught exceptions
 process.on('uncaughtException',
@@ -36,13 +35,13 @@ for (const folder of fs.readdirSync(path.resolve('src', 'commands'))) {
 	const folderPath = path.resolve('src', 'commands', folder);
 
 	for (const file of fs.readdirSync(folderPath)) {
-		client.commands.push((await import(pathToFileURL(path.join(folderPath, file)).href)).default);
+		client.commands.push((await import(`./commands/${folder}/${file}`)).default);
 	}
 }
 
 // Loads the events
 for (const file of fs.readdirSync(path.resolve('src', 'events'))) {
-	const event = await import(pathToFileURL(path.join('src', 'events', file)).href);
+	const event = await import(`./events/${file}`);
 
 	if (event.default.once) client.once(file.split(/\./g)[0], event.default.execute);
 	else client.on(file.split(/\./g)[0], event.default.execute);
