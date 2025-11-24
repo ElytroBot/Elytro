@@ -19,17 +19,28 @@ module.exports = {
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		const amount = interaction.options.getInteger('amount');
 
-		await interaction.channel.bulkDelete(amount, true);
-		
-		await interaction.reply({
-			embeds: [
-				new EmbedBuilder({
-					color: EmbedColor.primary,
-					title: 'Purge',
-					fields: [{ name: 'Amount', value: amount.toString() }]
+		await interaction.channel
+			.bulkDelete(amount, true)
+			.then(
+				() => interaction.reply({
+					embeds: [
+						new EmbedBuilder({
+							color: EmbedColor.primary,
+							title: 'Purge',
+							fields: [{ name: 'Amount', value: amount.toString() }]
+						})
+					],
+					flags: MessageFlags.Ephemeral
+				}),
+				() => interaction.reply({
+					embeds: [
+						new EmbedBuilder({
+							color: EmbedColor.danger,
+							description: 'I do not have the required permissions.'
+						})
+					],
+					flags: MessageFlags.Ephemeral
 				})
-			],
-			flags: MessageFlags.Ephemeral
-		});
+			);
 	}
 } satisfies Command;

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandChannelOption, ChannelType, ChatInputCommandInteraction, TextChannel, SlashCommandIntegerOption, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandChannelOption, ChannelType, ChatInputCommandInteraction, TextChannel, SlashCommandIntegerOption, EmbedBuilder, MessageFlags } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { EmbedColor } from '../../structure/EmbedColor';
 
@@ -26,19 +26,30 @@ module.exports = {
 		const channel = interaction.options.getChannel('channel') as TextChannel ?? interaction.channel;
 		const duration = interaction.options.getInteger('duration');
 
-		await channel.setRateLimitPerUser(duration);
-
-		await interaction.reply({
-			embeds: [
-				new EmbedBuilder({
-					color: EmbedColor.success,
-					title: 'Slowmode Set',
-					fields: [
-						{ name: 'Duration', value: `${duration}s` },
-						{ name: 'Channel', value: `<#${channel.id}>` }
+		await channel
+			.setRateLimitPerUser(duration)
+			.then(
+				() => interaction.reply({
+					embeds: [
+						new EmbedBuilder({
+							color: EmbedColor.success,
+							title: 'Slowmode Set',
+							fields: [
+								{ name: 'Duration', value: `${duration}s` },
+								{ name: 'Channel', value: `<#${channel.id}>` }
+							]
+						})
 					]
+				}),
+				() => interaction.reply({
+					embeds: [
+						new EmbedBuilder({
+							color: EmbedColor.danger,
+							description: 'I do not have the required permissions.'
+						})
+					],
+					flags: MessageFlags.Ephemeral
 				})
-			]
-		});
+			);
 	}
 } satisfies Command;
