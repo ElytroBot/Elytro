@@ -4,14 +4,18 @@ import { GuildModel } from '../schemas/Guild';
 
 module.exports = {
 	async execute(member: GuildMember) {
-		const guild = await GuildModel.findById(member.guild.id);
+		const dbGuild = await GuildModel.findOne({
+			_id: member.guild.id,
+			plugins: 'Saluter',
+			join_message: { $exists: true, $ne: null }
+		});
 
-		if (!guild?.plugins.includes('Saluter') || !guild.join_message) return;
+		if (!dbGuild) return;
 
-		member.guild.channels
-			.fetch(guild.join_message.channel)
+		await member.guild.channels
+			.fetch(dbGuild.join_message.channel)
 			.then((channel: TextChannel) =>
-				channel.send(guild.join_message.content
+				channel.send(dbGuild.join_message.content
 					.replaceAll('{user}', member.toString())
 					.replaceAll('{server}', member.guild.name)))
 			.catch(() => {});
