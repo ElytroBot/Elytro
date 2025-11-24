@@ -85,8 +85,8 @@ module.exports = {
 } satisfies Command;
 
 async function getEmbed(location: string, units: string, index: number) {
-	const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${process.env.WEATHER_API_KEY}&units=${units}`;
-	const forecast = (await fetch(forecastUrl).then(r => r.json()));
+	const forecast = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${process.env.WEATHER_API_KEY}&units=${units}`)
+		.then(res => res.json());
 
 	return new EmbedBuilder({
 		color: EmbedColor.primary,
@@ -94,18 +94,19 @@ async function getEmbed(location: string, units: string, index: number) {
 		description: `<t:${forecast.list[index].dt}:f>`,
 		fields: [
 			{
-				name: 'Precipitation',
-				value: `${Math.round(forecast.list[index].pop * 100)}%`,
-				inline: true
-			},
-			{
 				name: 'Temperature',
 				value: forecast.list[index].main.temp + (units == 'metric'? '°C' : units == 'imperial'? '°F' : 'K'),
 				inline: true
 			},
 			{
-				name: '\u200b',
-				value: '\u200b'
+				name: 'Feels Like',
+				value: forecast.list[index].main.feels_like + (units == 'metric'? '°C' : units == 'imperial'? '°F' : 'K'),
+				inline: true
+			},
+			{
+				name: 'Precipitation',
+				value: `${Math.round(forecast.list[index].pop * 100)}%`,
+				inline: true
 			},
 			{
 				name: 'Humidity',
@@ -116,13 +117,18 @@ async function getEmbed(location: string, units: string, index: number) {
 				name: 'Wind Speed',
 				value: forecast.list[index].wind.speed + (units != 'imperial'? 'm/s' : 'mph'),
 				inline: true
+			},
+			{
+				name: 'Cloud Cover',
+				value: `${forecast.list[index].clouds.all}%`,
+				inline: true
 			}
 		],
-		thumbnail: { url: `http://openweathermap.org/img/wn/${forecast.list[0].weather[0].icon}.png` }
+		thumbnail: { url: `http://openweathermap.org/img/wn/${forecast.list[index].weather[0].icon}.png` }
 	});
 }
 
-function getActionRow(location: string, units, index: number) {
+function getActionRow(location: string, units: string, index: number) {
 	return new ActionRowBuilder<ButtonBuilder>()
 		.addComponents(
 			Button.primary({
