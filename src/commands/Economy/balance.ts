@@ -15,14 +15,14 @@ module.exports = {
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		const user = interaction.options.getUser('user', false);
-		const dbUser = await UserModel.findById((user ?? interaction.user).id);
+		const user = interaction.options.getUser('user', false) ?? interaction.user;
+		const dbUser = await UserModel.findById(user.id);
 
-		interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
 					color: EmbedColor.primary,
-					title: `${(user ?? interaction.user).displayName}'s Balance`,
+					title: `${user.displayName}'s Balance`,
 					description: `${dbUser?.balance.toLocaleString() ?? 0} ${emojis.coin}`
 				})
 			]
