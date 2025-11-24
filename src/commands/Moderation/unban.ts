@@ -25,8 +25,8 @@ module.exports = {
 
 		await interaction.guild.members
 			.unban(user, reason)
-			.then(() =>
-				interaction.reply({
+			.then(
+				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
 							color: EmbedColor.primary,
@@ -37,10 +37,8 @@ module.exports = {
 							]
 						})
 					]
-				})
-			)
-			.catch(() =>
-				interaction.reply({
+				}),
+				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
 							color: EmbedColor.danger,

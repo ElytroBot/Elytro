@@ -10,57 +10,55 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
 
 	async onCommandInteraction(interaction: UserContextMenuCommandInteraction) {
-		interaction.guild.members
+		await interaction.guild.members
 			.fetch(interaction.targetUser.id)
-			.then(async member => {
-				if (member.id == interaction.guild.members.me.id) {
-					interaction.reply({
-						embeds: [
-							new EmbedBuilder({
-								color: EmbedColor.danger,
-								description: 'I cannot warn myself!'
-							})
-						],
-						flags: MessageFlags.Ephemeral
-					});
-					return;
-				}
-				else if ((interaction.member as GuildMember).roles.highest.position <=
-					member.roles.highest.position &&
-					interaction.guild.ownerId != interaction.user.id) {
-					interaction.reply({
-						embeds: [
-							new EmbedBuilder({
-								color: EmbedColor.danger,
-								description:
-									'You do not have a higher role than the target member.'
-							})
-						],
-						flags: MessageFlags.Ephemeral
-					});
-					return;
-				}
+			.then(
+				async member => {
+					if (member.id == interaction.guild.members.me.id) {
+						return interaction.reply({
+							embeds: [
+								new EmbedBuilder({
+									color: EmbedColor.danger,
+									description: 'I cannot warn myself!'
+								})
+							],
+							flags: MessageFlags.Ephemeral
+						});
+					}
+					else if ((interaction.member as GuildMember).roles.highest.position <=
+						member.roles.highest.position &&
+						interaction.guild.ownerId != interaction.user.id) {
+						return interaction.reply({
+							embeds: [
+								new EmbedBuilder({
+									color: EmbedColor.danger,
+									description:
+										'You do not have a higher role than the target member.'
+								})
+							],
+							flags: MessageFlags.Ephemeral
+						});
+					}
 
-				interaction.showModal(
-					new ModalBuilder()
-						.setCustomId(`Warn|${interaction.targetUser.id}`)
-						.setTitle('Warn')
-						.addLabelComponents(
-							new LabelBuilder()
-								.setLabel('Reason')
-								.setDescription('Optional reason for the warning.')
-								.setTextInputComponent(
-									new TextInputBuilder()
-										.setCustomId('reason')
-										.setStyle(TextInputStyle.Short)
-										.setMaxLength(100)
-										.setRequired(false)
-								)
-						)
-				);
-			})
-			.catch(() => {
-				interaction.reply({
+					return interaction.showModal(
+						new ModalBuilder()
+							.setCustomId(`Warn|${interaction.targetUser.id}`)
+							.setTitle('Warn')
+							.addLabelComponents(
+								new LabelBuilder()
+									.setLabel('Reason')
+									.setDescription('Optional reason for the warning.')
+									.setTextInputComponent(
+										new TextInputBuilder()
+											.setCustomId('reason')
+											.setStyle(TextInputStyle.Short)
+											.setMaxLength(100)
+											.setRequired(false)
+									)
+							)
+					);
+				},
+				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
 							color: EmbedColor.danger,
@@ -68,8 +66,8 @@ module.exports = {
 						})
 					],
 					flags: MessageFlags.Ephemeral
-				});
-			});
+				})
+			);
 	},
 	
 	async onModalSubmitInteraction(interaction: ModalSubmitInteraction) {
@@ -93,26 +91,25 @@ module.exports = {
 								description: `You have been warned by ${interaction.member}.`,
 								fields: [
 									... reason? [{ name: 'Reason', value: reason }] : [],
-									{ name: 'Server', value: interaction.guild.toString() }
+									{ name: 'Server', value: interaction.guild.name }
 								]
 							})
 						]
 					})
 				)
 				.catch(() => {})
-		]);
-
-		await interaction.reply({
-			embeds: [
-				new EmbedBuilder({
-					color: EmbedColor.primary,
-					title: 'Warn',
-					fields: [
-						{ name: 'User', value: `<@${userId}>` },
-						... reason? [{ name: 'Reason', value: reason }] : []
-					]
-				})
-			]
-		});
+		])
+			.then(() => interaction.reply({
+				embeds: [
+					new EmbedBuilder({
+						color: EmbedColor.primary,
+						title: 'Warn',
+						fields: [
+							{ name: 'User', value: `<@${userId}>` },
+							... reason? [{ name: 'Reason', value: reason }] : []
+						]
+					})
+				]
+			}));
 	}
 } satisfies Command;
