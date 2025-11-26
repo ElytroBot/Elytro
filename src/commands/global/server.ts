@@ -15,7 +15,7 @@ module.exports = {
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({ color: EmbedColor.primary, title: 'Server Info' })
 					.addFields(
@@ -58,9 +58,9 @@ async function formatStatuses(guild: Guild) {
 	await guild.members.fetch({ withPresences: true });
 
 	return `${emojis.online} ${usersWithStatus(guild, 'online')}
-      ${emojis.dnd} ${usersWithStatus(guild, 'dnd')}
-      ${emojis.idle} ${usersWithStatus(guild, 'idle')}
-      ${emojis.offline} ${usersWithStatus(guild, 'offline')}`;
+		${emojis.dnd} ${usersWithStatus(guild, 'dnd')}
+		${emojis.idle} ${usersWithStatus(guild, 'idle')}
+		${emojis.offline} ${usersWithStatus(guild, 'offline')}`;
 }
 
 function usersWithStatus(guild: Guild, status: PresenceStatus) {

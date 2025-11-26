@@ -10,16 +10,16 @@ module.exports = {
 	async onCommandInteraction(interaction) {
 		const side = Math.round(Math.random());
 
-		interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Coin Flip',
-					description: `The coin is ${side == 0 ? 'heads' : 'tails'}!`
-				}).setThumbnail(
-					side == 0? 'https://i.imgur.com/WwIZMNe.png' :
-						'https://i.imgur.com/3Pvhkka.png'
-				)
+					description: `The coin is ${side == 0 ? 'heads' : 'tails'}!`,
+					thumbnail: {
+						url: `https://i.imgur.com/${side == 0? 'WwIZMNe' : '3Pvhkka'}.png`
+					}
+				})
 			]
 		});
 	}

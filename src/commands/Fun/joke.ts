@@ -8,10 +8,10 @@ module.exports = {
 		.setDescription('Tells you a joke.'),
 
 	async onCommandInteraction(interaction) {
-		fetch('https://v2.jokeapi.dev/joke/Miscellaneous,Dark,Pun,Spooky,Christmas?blacklistFlags=nsfw,religious,political,racist,sexist,explicit')
+		await fetch('https://v2.jokeapi.dev/joke/Miscellaneous,Dark,Pun,Spooky,Christmas?blacklistFlags=nsfw,religious,political,racist,sexist,explicit')
 			.then(res => res.json())
-			.then(json => {
-				interaction.reply({
+			.then(
+				json => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
 							color: EmbedColor.primary,
@@ -20,10 +20,8 @@ module.exports = {
 							footer: { text: 'Powered by jokeapi.dev' }
 						})
 					]
-				});
-			})
-			.catch(() => {
-				interaction.reply({
+				}),
+				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
 							color: EmbedColor.danger,
@@ -31,7 +29,7 @@ module.exports = {
 						})
 					],
 					flags: MessageFlags.Ephemeral
-				});
-			});
+				})
+			);
 	}
 } satisfies Command;

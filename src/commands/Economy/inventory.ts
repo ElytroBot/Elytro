@@ -15,13 +15,14 @@ module.exports = {
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		const user = interaction.options.getUser('user', false);
-		const dbUser = await UserModel.findById((user ?? interaction.user).id);
+		const user = interaction.options.getUser('user', false) ?? interaction.user;
+		const dbUser = await UserModel.findById(user.id);
 
-		if (!dbUser || Array
-			.from(dbUser.inventory.values())
-			.filter(item => item != 0).length == 0) {
-			interaction.reply({
+		if (
+			!dbUser ||
+			Array.from(dbUser.inventory.values()).filter(item => item != 0).length == 0
+		) {
+			await interaction.reply({
 				embeds: [
 					new EmbedBuilder({
 						color: EmbedColor.danger,
@@ -33,19 +34,15 @@ module.exports = {
 			return;
 		}
 
-		let description = '';
-		dbUser.inventory.forEach((value: number, key: string) => {
-			if (value != 0) {
-				description += `**${emojis[key]} ${key}** - **${value.toLocaleString()}x**\n`;
-			}
-		});
-
-		interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
 					color: EmbedColor.primary,
-					title: `${(user ?? interaction.user).displayName}'s Inventory`,
-					description: description
+					title: `${user.displayName}'s Inventory`,
+					description: Array.from(dbUser.inventory.entries())
+						.filter(([, value]) => value != 0)
+						.map(([key, value]) => `**${emojis[key]} ${key}** - **${value.toLocaleString()}x**`)
+						.join('\n')
 				})
 			]
 		});

@@ -19,7 +19,7 @@ module.exports = {
 
 	async onCommandInteraction(interaction: MessageContextMenuCommandInteraction) {
 		if (interaction.targetMessage.content.length == 0) {
-			interaction.reply({
+			await interaction.reply({
 				embeds: [
 					new EmbedBuilder()
 						.setColor(EmbedColor.danger)
@@ -30,11 +30,11 @@ module.exports = {
 			return;
 		}
 
-		const res = await fetch(`https://translate.google.com/m?hl=${interaction.locale}&sl=auto&q=${interaction.targetMessage.content}`);
-
-		interaction.reply({
-			content: load(await res.text())('.result-container').text(),
-			flags: MessageFlags.Ephemeral
-		});
+		await fetch(`https://translate.google.com/m?hl=${interaction.locale}&sl=auto&q=${interaction.targetMessage.content}`)
+			.then(res => res.text())
+			.then(text => interaction.reply({
+				content: load(text)('.result-container').text(),
+				flags: MessageFlags.Ephemeral
+			}));
 	}
 } satisfies Command;

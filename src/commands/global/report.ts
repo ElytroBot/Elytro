@@ -53,7 +53,7 @@ module.exports = {
 						.setAccentColor(EmbedColor.danger)
 						.addTextDisplayComponents(
 							new TextDisplayBuilder()
-								.setContent(`## Bug Report\n${interaction.fields.getTextInputValue('description')}`)
+								.setContent(`### Bug Report\n${interaction.fields.getTextInputValue('description')}`)
 						)
 						.addMediaGalleryComponents(
 							new MediaGalleryBuilder()
@@ -64,11 +64,10 @@ module.exports = {
 						)
 				],
 				flags: MessageFlags.IsComponentsV2
+			}))
+			.then(() => interaction.reply({
+				content: 'Thank you for taking the time to report this bug! Our team is actively working on fixing the issue. For further assistance or updates, feel free to join our Discord community: https://discord.gg/CXSsdwhgwb.',
+				flags: MessageFlags.Ephemeral
 			}));
-
-		await interaction.reply({
-			content: 'Thank you for taking the time to report this bug! Our team is actively working on fixing the issue. For further assistance or updates, feel free to join our Discord community: https://discord.gg/CXSsdwhgwb.',
-			flags: MessageFlags.Ephemeral
-		});
 	}
 } satisfies Command;

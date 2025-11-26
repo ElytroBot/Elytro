@@ -23,7 +23,7 @@ module.exports = {
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({ color: EmbedColor.primary, title: 'Bot Info' }).addFields(
 					{

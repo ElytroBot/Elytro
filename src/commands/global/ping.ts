@@ -17,7 +17,7 @@ module.exports = {
 		),
 
 	async onCommandInteraction(interaction) {
-		interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({ color: EmbedColor.primary, title: 'Ping' }).addFields(
 					{

@@ -16,16 +16,16 @@ module.exports = {
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		const reason = interaction.options.getString('reason', false);
 
-		await UserModel.findByIdAndUpdate(interaction.user.id, { afk_status: reason });
-		
-		await interaction.reply({
-			embeds: [
-				new EmbedBuilder({
-					color: EmbedColor.success,
-					description: 'Afk status successfully updated!'
-				})
-			],
-			flags: MessageFlags.Ephemeral
-		});
+		await UserModel
+			.findByIdAndUpdate(interaction.user.id, { afk_status: reason }, { upsert: true })
+			.then(() => interaction.reply({
+				embeds: [
+					new EmbedBuilder({
+						color: EmbedColor.success,
+						description: 'Afk status successfully updated!'
+					})
+				],
+				flags: MessageFlags.Ephemeral
+			}));
 	}
 } satisfies Command;

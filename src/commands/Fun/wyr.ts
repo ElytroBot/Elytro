@@ -8,13 +8,13 @@ module.exports = {
 		.setDescription('Asks a would you rather question.'),
 
 	async onCommandInteraction(interaction) {
-		fetch(
+		await fetch(
 			'https://would-you-rather.p.rapidapi.com/wyr/random',
 			{ headers: { 'x-rapidapi-key': process.env.RAPID_API_KEY } }
 		)
 			.then(res => res.json())
-			.then(json => {
-				interaction.reply({
+			.then(
+				json => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
 							color: EmbedColor.primary,
@@ -23,10 +23,8 @@ module.exports = {
 							footer: { text: 'Powered by rapidapi.com' }
 						})
 					]
-				});
-			})
-			.catch(() => {
-				interaction.reply({
+				}),
+				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
 							color: EmbedColor.danger,
@@ -34,7 +32,7 @@ module.exports = {
 						})
 					],
 					flags: MessageFlags.Ephemeral
-				});
-			});
+				})
+			);
 	}
 } satisfies Command;
