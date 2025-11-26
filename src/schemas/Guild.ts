@@ -3,10 +3,10 @@ import { model, Schema } from 'mongoose';
 const WarnSchema = new Schema({
 	_id: {
 		type: String,
-		required: true,
 		default: () => Date.now()
 			.toString(36)
-			.toUpperCase()
+			.toUpperCase(),
+		required: true
 	},
 	user_id: {
 		type: String,
@@ -47,7 +47,7 @@ const TicketingPanel = new Schema({
 const MessageSchema = new Schema({
 	channel: {
 		type: String,
-		required: true
+		default: null
 	},
 	content: {
 		type: String,
