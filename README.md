@@ -60,6 +60,7 @@ To use this bot you must first define some environment variables. First create a
 |:------------------| :----------------------------------------------------|
 |`TOKEN`            | Your Discord bot's token.                            |
 |`CONNECTION_STRING`| The MongoDB connection string for your database.     |
+|`PORT`             | The port on which to run the API.                    |
 |`WEATHER_API_KEY`  | Your Weather API key.                                |
 |`RAPID_API_KEY`    | Your Rapid API key.                                  |
 
