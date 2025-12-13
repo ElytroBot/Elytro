@@ -11,6 +11,7 @@ module.exports = {
 			new SlashCommandStringOption()
 				.setName('reason')
 				.setDescription('The reason you are going AFK (removes your AFK status if not provided).')
+				.setMaxLength(100)
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
