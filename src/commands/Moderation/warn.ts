@@ -89,12 +89,16 @@ module.exports = {
 							embeds: [
 								new EmbedBuilder({
 									color: EmbedColor.danger,
+									author: {
+										name: interaction.user.displayName,
+										icon_url: interaction.user.avatarURL()
+									},
 									title: 'Warning',
-									description: `You have been warned by ${interaction.member}.`,
-									fields: [
-										... reason? [{ name: 'Reason', value: reason }] : [],
-										{ name: 'Server', value: interaction.guild.name }
-									]
+									description: `> ${reason || 'No reason specified.'}`,
+									footer: {
+										text: interaction.guild.name,
+										icon_url: interaction.guild.iconURL()
+									}
 								})
 							]
 						})
