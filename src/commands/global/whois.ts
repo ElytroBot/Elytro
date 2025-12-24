@@ -18,73 +18,76 @@ module.exports = {
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		const user = interaction.options.getUser('user') ?? interaction.user;
-
-		await interaction.guild.members
+		const member = await interaction.guild.members
 			.fetch(user.id)
-			.then(
-				async member => {
-					const dbGuild = await GuildModel.findById(interaction.guild.id);
+			.catch(() => {});
 
-					return interaction.reply({
-						embeds: [
-							new EmbedBuilder({
-								color: EmbedColor.primary,
-								title: 'Whois',
-								fields: [
-									{
-										name: 'Display Name',
-										value: member.displayName,
-										inline: true
-									},
-									{
-										name: 'Joined',
-										value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:d>`,
-										inline: true
-									},
-									{
-										name: 'Registered',
-										value: `<t:${Math.floor(user.createdTimestamp / 1000)}:d>`,
-										inline: true
-									},
-									... member.roles.cache.size - 1 > 0? [{
-										name: `Roles (${member.roles.cache.size - 1})`,
-										value: member.roles.cache
-											.filter(role => role.name != '@everyone')
-											.map(role => role.toString())
-											.join(' ')
-									}] : [],
-									{
-										name: 'Highest Role',
-										value: member.roles.highest.toString(),
-										inline: true
-									},
-									{
-										name: 'Warns',
-										value: dbGuild.warns
-											?.filter(warn => warn.user_id == member.id)
-											.length.toString() ?? '0',
-										inline: true
-									},
-									{
-										name: 'Status',
-										value: `${emojis[member.presence.status ?? 'offline']} ${member.presence.status ?? 'offline'}`,
-										inline: true
-									}
-								],
-								thumbnail: { url: member.displayAvatarURL() }
-							})
-						]
-					});
-				},
-				() => interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.danger,
-							description: 'Could not find this user in this server.'
-						})
+		if (!member) {
+			await interaction.reply({
+				embeds: [
+					new EmbedBuilder({
+						color: EmbedColor.danger,
+						description: 'Could not find this user in this server.'
+					})
+				],
+				flags: MessageFlags.Ephemeral
+			});
+			return;
+		}
+
+		const dbGuild = await GuildModel.findById(interaction.guild.id);
+
+		await interaction.reply({
+			embeds: [
+				new EmbedBuilder({
+					color: EmbedColor.primary,
+					title: 'Whois',
+					fields: [
+						{
+							name: 'Display Name',
+							value: member.displayName,
+							inline: true
+						},
+						{
+							name: 'Joined',
+							value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:d>`,
+							inline: true
+						},
+						{
+							name: 'Registered',
+							value: `<t:${Math.floor(user.createdTimestamp / 1000)}:d>`,
+							inline: true
+						},
+						...(member.roles.cache.size > 1 ?
+							[
+								{
+									name: `Roles (${member.roles.cache.size - 1})`,
+									value: member.roles.cache
+										.filter(role => role.name != '@everyone')
+										.map(role => role.toString())
+										.join(' ')
+								}
+							]
+							: []),
+						{
+							name: 'Highest Role',
+							value: member.roles.highest.toString(),
+							inline: true
+						},
+						{
+							name: 'Warnings',
+							value: String(dbGuild?.warns?.filter(w => w.user_id == member.id).length ?? 0),
+							inline: true
+						},
+						{
+							name: 'Status',
+							value: `${emojis[member.presence.status ?? 'offline']} ${member.presence.status ?? 'offline'}`,
+							inline: true
+						}
 					],
-					flags: MessageFlags.Ephemeral
+					thumbnail: { url: member.displayAvatarURL() }
 				})
-			);
+			]
+		});
 	}
 } satisfies Command;
