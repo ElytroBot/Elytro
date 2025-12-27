@@ -43,6 +43,11 @@ module.exports = {
 
 		const random = Math.round(Math.random() * 100);
 
+
+		if (Math.round(Math.random() * 100) < 100) {
+
+		}
+
 		if (random < 5) {
 			const money = Math.round(Math.random() * 10000 + 20000);
 
