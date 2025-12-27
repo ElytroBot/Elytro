@@ -44,22 +44,8 @@ module.exports = {
 		const random = Math.round(Math.random() * 100);
 
 
-		if (Math.round(Math.random() * 100) < 5) {
+		if (Math.round(Math.random() * 100) < 100) {
 
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.primary,
-						title: 'Dig',
-						description: `Your shovel broke, you can buy another shovel with \`/shop buy shovel\``
-					})
-				]
-			});
-			user.inventory.set(
-				"Shovel",
-				(user.inventory.get("Shovel")) - 1
-			);
-			return;
 		}
 
 		if (random < 5) {
@@ -91,6 +77,21 @@ module.exports = {
 				]
 			});
 			user.balance += money;
+		}
+		else if(random < 55) {
+			interaction.reply({
+				embeds: [
+					new EmbedBuilder({
+						color: EmbedColor.primary,
+						title: 'Dig',
+						description: `Your shovel broke, you can buy another shovel with \`/shop buy shovel\``
+					})
+				]
+			});
+			user.inventory.set(
+				"Shovel",
+				(user.inventory.get("Shovel")) - 1
+			);
 		}
 		else {
 			interaction.reply({
