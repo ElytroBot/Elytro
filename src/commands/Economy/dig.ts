@@ -18,7 +18,7 @@ module.exports = {
 				embeds: [
 					new EmbedBuilder({
 						color: EmbedColor.danger,
-						description: `You need a **${emojis.Shovel} Shovel** in order to dig! Try using \`/shop buy\` to buy one.`
+						description: `You need a **${emojis.Shovel} Shovel** in order to dig! Try using \`/shop buy shovel\` to buy one.`
 					})
 				],
 				flags: MessageFlags.Ephemeral
@@ -72,6 +72,21 @@ module.exports = {
 				]
 			});
 			user.balance += money;
+		}
+		else if(random < 55) {
+			interaction.reply({
+				embeds: [
+					new EmbedBuilder({
+						color: EmbedColor.primary,
+						title: 'Dig',
+						description: `Your shovel broke, you can buy another shovel with \`/shop buy shovel\``
+					})
+				]
+			});
+			user.inventory.set(
+				"Shovel",
+				(user.inventory.get("Shovel")) - 1
+			);
 		}
 		else {
 			interaction.reply({
