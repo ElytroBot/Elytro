@@ -18,7 +18,7 @@ module.exports = {
 				embeds: [
 					new EmbedBuilder({
 						color: EmbedColor.danger,
-						description: `You need a **${emojis.Shovel} Shovel** in order to dig! Try using \`/shop buy shovel\` to buy one.`
+						description: `You need a **${emojis.Shovel} Shovel** in order to dig! Try using \`/shop buy\` to buy one.`
 					})
 				],
 				flags: MessageFlags.Ephemeral
@@ -79,7 +79,7 @@ module.exports = {
 					new EmbedBuilder({
 						color: EmbedColor.primary,
 						title: 'Dig',
-						description: 'Your shovel broke! You can buy another shovel with `/shop buy shovel`.'
+						description: 'Your shovel broke! You can buy another one with `/shop buy`.'
 					})
 				]
 			});
