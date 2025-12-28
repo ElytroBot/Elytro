@@ -3,6 +3,7 @@ declare global {
 		interface ProcessEnv {
 			TOKEN: string;
 			CONNECTION_STRING: string;
+			PORT: string;
 			WEATHER_API_KEY: string;
 			RAPID_API_KEY: string;
 			NODE_ENV: string;
