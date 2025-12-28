@@ -54,7 +54,7 @@ npm install
 ```
 ## Environment Variables
 
-To use this bot you must first define some environment variables. First create a `.env` file and set the following environment variables.
+To use this bot, you must first define some environment variables. Create a `.env` file and set the following variables. You can refer to the provided `.env.example` file as a starting point.
 
 |Variable| Description                                                     |
 |:------------------| :----------------------------------------------------|

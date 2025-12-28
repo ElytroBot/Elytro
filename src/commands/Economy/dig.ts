@@ -73,6 +73,18 @@ module.exports = {
 			});
 			user.balance += money;
 		}
+		else if (random < 55) {
+			interaction.reply({
+				embeds: [
+					new EmbedBuilder({
+						color: EmbedColor.primary,
+						title: 'Dig',
+						description: 'Your shovel broke! You can buy another one with `/shop buy`.'
+					})
+				]
+			});
+			user.inventory.set('Shovel', user.inventory.get('Shovel') - 1);
+		}
 		else {
 			interaction.reply({
 				embeds: [
