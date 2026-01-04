@@ -39,6 +39,13 @@ Bring entertainment to your server with the **Fun** plugin:
 - Practical tools like `/weather` for weather forecasts and `/dictionary` for quick definitions.
 - Additional commands like `/wya` and `/joke`.
 
+### Ticketing
+Manage support requests cleanly and efficiently with Elytro’s **Ticketing** plugin:
+- Create **ticketing panels** from the dashboard.
+- Members can open tickets with a single click from a panel.
+- Staff are automatically notified in a specified channel when a ticket is opened.
+- Use `/ticket info` to view details about a ticket.
+
 ## Installation
 
 Run the following command to clone the repository.
