@@ -11,8 +11,8 @@ module.exports = {
 		.setDescription('Beg for some extra coins.'),
 
 	async onCommandInteraction(interaction) {
-		const user = await UserModel.findById(interaction.user.id) ??
-			await UserModel.create({ _id: interaction.user.id });
+		const user = await UserModel.findById(interaction.user.id)
+			?? await UserModel.create({ _id: interaction.user.id });
 		const now = Math.floor(Date.now() / 1000);
 
 		if (user.cooldowns.get('beg') > now) {

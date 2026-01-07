@@ -48,7 +48,7 @@ module.exports = {
 						},
 						{
 							name: 'Locked',
-							value: channel.locked? '`Yes`' : '`No`',
+							value: channel.locked ? '`Yes`' : '`No`',
 							inline: true
 						}
 					]
@@ -77,8 +77,8 @@ module.exports = {
 
 			tickets.push(...fetched.threads
 				.filter(t =>
-					t.ownerId == interaction.client.user.id &&
-					t.name.toLowerCase().includes(input.toLowerCase())
+					t.ownerId == interaction.client.user.id
+					&& t.name.toLowerCase().includes(input.toLowerCase())
 				)
 				.map(t => ({
 					name: t.name,
@@ -232,7 +232,7 @@ async function reply(interaction: RepliableInteraction, type: 'success' | 'error
 	return interaction.reply({
 		embeds: [
 			new EmbedBuilder({
-				color: type == 'success'? EmbedColor.success : EmbedColor.danger,
+				color: type == 'success' ? EmbedColor.success : EmbedColor.danger,
 				description: message
 			})
 		],

@@ -152,7 +152,7 @@ module.exports = {
 	async onAutocompleteInteraction(interaction: AutocompleteInteraction) {
 		const user = await UserModel.findById(interaction.user.id);
 		const option = interaction.options.getFocused(true);
-        
+
 		if (!user) {
 			interaction.respond([]);
 			return;

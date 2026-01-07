@@ -16,7 +16,7 @@ module.exports = {
 						new EmbedBuilder({
 							color: EmbedColor.primary,
 							title: 'Joke',
-							description: json.type == 'single'? json.joke : `${json.setup}\n${json.delivery}`,
+							description: json.type == 'single' ? json.joke : `${json.setup}\n${json.delivery}`,
 							footer: { text: 'Powered by jokeapi.dev' }
 						})
 					]

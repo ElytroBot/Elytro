@@ -18,10 +18,7 @@ module.exports = {
 		const user = interaction.options.getUser('user', false) ?? interaction.user;
 		const dbUser = await UserModel.findById(user.id);
 
-		if (
-			!dbUser ||
-			Array.from(dbUser.inventory.values()).filter(item => item != 0).length == 0
-		) {
+		if (!dbUser || Array.from(dbUser.inventory.values()).filter(i => i != 0).length == 0) {
 			await interaction.reply({
 				embeds: [
 					new EmbedBuilder({

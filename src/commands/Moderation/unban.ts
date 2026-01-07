@@ -33,7 +33,7 @@ module.exports = {
 							title: 'Unban',
 							fields: [
 								{ name: 'User', value: user.toString() },
-								... reason? [{ name: 'Reason', value: reason }] : []
+								...reason ? [{ name: 'Reason', value: reason }] : []
 							]
 						})
 					]

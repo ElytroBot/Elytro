@@ -17,7 +17,7 @@ module.exports = {
 				.setMaxValue(100_000)
 				.setRequired(true)
 		),
-	
+
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		const user = await UserModel.findById(interaction.user.id);
 
@@ -431,8 +431,8 @@ function generateEmbed(bet: string, dealerCards: string, playerCards: string, de
 		color: EmbedColor.primary,
 		title: 'Blackjack',
 		description: `Bet: ${bet} ${emojis.coin}`,
-		fields:[
-			{ name: `Dealer (${dealerScore? calculateScore(dealerCards) : '?'})`, value: dealerCards },
+		fields: [
+			{ name: `Dealer (${dealerScore ? calculateScore(dealerCards) : '?'})`, value: dealerCards },
 			{ name: `You (${calculateScore(playerCards)})`, value: playerCards }
 		]
 	});

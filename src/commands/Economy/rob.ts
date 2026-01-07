@@ -75,7 +75,7 @@ module.exports = {
 		}
 
 		const now = Math.floor(Date.now() / 1000);
-		
+
 		if (dbUser.cooldowns.get('rob') > now) {
 			interaction.reply({
 				embeds: [
@@ -91,7 +91,8 @@ module.exports = {
 
 		if (dbTarget.inventory.get('Security Camera') > 0) {
 			const count = dbTarget.inventory.get('Security Camera');
-			if (Math.random() < Math.pow(.15, count))
+
+			if (Math.random() < Math.pow(0.15, count))
 				success(interaction, dbUser, dbTarget, interaction.user, target);
 			else bust(interaction, dbUser, dbTarget, target);
 
@@ -139,7 +140,7 @@ function success(interaction: ChatInputCommandInteraction, dbUser: UserDocument,
 	const money = transfer(
 		dbTarget,
 		dbUser,
-		Math.floor(Math.random() * (dbTarget.balance * .25 - 5000)) + 5000
+		Math.floor(Math.random() * (dbTarget.balance * 0.25 - 5000)) + 5000
 	).toLocaleString();
 
 	interaction.reply({

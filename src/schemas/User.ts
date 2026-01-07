@@ -57,12 +57,12 @@ export const UserModel = model<UserDocument>('User', UserSchema);
 export interface UserDocument {
 	_id: string | null;
 	cooldowns: Map<string, number>;
-	reminders: { _id: string, expiration: number }[];
+	reminders: { _id: string; expiration: number }[];
 	balance: number;
 	inventory: Map<string, number>;
 	afk_status: string;
-	background: string,
-	accent: string
+	background: string;
+	accent: string;
 }
 
 export function transfer(giver: UserDocument, receiver: UserDocument, amount: number) {

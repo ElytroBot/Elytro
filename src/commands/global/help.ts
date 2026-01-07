@@ -40,9 +40,10 @@ module.exports = {
 } satisfies Command;
 
 async function paginate(page: number, guildId: string, selected: string[]) {
-	const plugins = guildId ? await GuildModel.findById(guildId)
-		.then(doc => doc?.plugins ?? [])
-		.then(plugins => plugins.filter(p => fs.existsSync(path.resolve('src', 'commands', p))))
+	const plugins = guildId
+		? await GuildModel.findById(guildId)
+				.then(doc => doc?.plugins ?? [])
+				.then(plugins => plugins.filter(p => fs.existsSync(path.resolve('src', 'commands', p))))
 		: [];
 	let commands = [];
 

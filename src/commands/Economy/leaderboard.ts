@@ -39,7 +39,7 @@ async function getEmbed(page: number, client: Client) {
 	}
 
 	const userCount = await UserModel.countDocuments();
-	const pageCount = (userCount / 10 < 5)? Math.ceil(userCount / 10) : 5;
+	const pageCount = (userCount / 10 < 5) ? Math.ceil(userCount / 10) : 5;
 
 	return new EmbedBuilder({
 		color: EmbedColor.primary,

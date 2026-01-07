@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-unused-vars */
 import { AnySelectMenuInteraction, AutocompleteInteraction, ButtonInteraction, CommandInteraction, ModalSubmitInteraction } from 'discord.js';
 
 export interface Command {

@@ -81,8 +81,8 @@ function getActionRow(tutorial: string, page: number) {
 				disabled: page == 0
 			}),
 			Button.primary({
-				custom_id: page == (<object[]>tutorials[tutorial]).length - 1? 'finish' : `${tutorial}|${page + 1}`,
-				label: page == (<object[]>tutorials[tutorial]).length - 1? 'Finish' : 'Next'
+				custom_id: page == tutorials[tutorial].length - 1 ? 'finish' : `${tutorial}|${page + 1}`,
+				label: page == tutorials[tutorial].length - 1 ? 'Finish' : 'Next'
 			})
 		);
 }

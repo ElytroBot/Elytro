@@ -28,8 +28,8 @@ module.exports = {
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		const plugin = interaction.options.getString('plugin');
-		const guild = await GuildModel.findById(interaction.guild.id) ??
-			await GuildModel.create({ _id: interaction.guild.id });
+		const guild = await GuildModel.findById(interaction.guild.id)
+			?? await GuildModel.create({ _id: interaction.guild.id });
 
 		if (guild.plugins.includes(plugin)) {
 			if (fs.existsSync(path.resolve('src', 'commands', plugin))) {
@@ -39,8 +39,8 @@ module.exports = {
 					commandNames.push(file.split('.')[0]));
 
 				(await interaction.guild.commands.fetch()).forEach(command => {
-					if (command.client.application.id == interaction.client.application.id &&
-						commandNames.includes(command.name)) {
+					if (command.client.application.id == interaction.client.application.id
+						&& commandNames.includes(command.name)) {
 						interaction.guild.commands.delete(command.id);
 					}
 				});

@@ -103,7 +103,7 @@ const GuildSchema = new Schema({
 export const GuildModel = model('Guild', GuildSchema);
 
 export function getLevel(xp: number) {
-	return Math.floor(Math.sqrt(xp / 50 + .25) - .5);
+	return Math.floor(Math.sqrt(xp / 50 + 0.25) - 0.5);
 }
 
 export function getXP(level: number) {

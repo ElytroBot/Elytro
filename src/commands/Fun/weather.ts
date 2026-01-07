@@ -95,12 +95,12 @@ async function getEmbed(location: string, units: string, index: number) {
 		fields: [
 			{
 				name: 'Temperature',
-				value: forecast.list[index].main.temp + (units == 'metric'? '°C' : units == 'imperial'? '°F' : 'K'),
+				value: forecast.list[index].main.temp + (units == 'metric' ? '°C' : units == 'imperial' ? '°F' : 'K'),
 				inline: true
 			},
 			{
 				name: 'Feels Like',
-				value: forecast.list[index].main.feels_like + (units == 'metric'? '°C' : units == 'imperial'? '°F' : 'K'),
+				value: forecast.list[index].main.feels_like + (units == 'metric' ? '°C' : units == 'imperial' ? '°F' : 'K'),
 				inline: true
 			},
 			{
@@ -115,7 +115,7 @@ async function getEmbed(location: string, units: string, index: number) {
 			},
 			{
 				name: 'Wind Speed',
-				value: forecast.list[index].wind.speed + (units != 'imperial'? 'm/s' : 'mph'),
+				value: forecast.list[index].wind.speed + (units != 'imperial' ? 'm/s' : 'mph'),
 				inline: true
 			},
 			{

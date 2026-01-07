@@ -21,12 +21,12 @@ declare module 'discord.js' {
 
 // Creates the Discord client
 const client = new Client({
-	intents: GatewayIntentBits.GuildMembers |
-		GatewayIntentBits.GuildPresences |
-		GatewayIntentBits.Guilds |
-		GatewayIntentBits.GuildMessageReactions |
-		GatewayIntentBits.MessageContent |
-		GatewayIntentBits.GuildMessages
+	intents: GatewayIntentBits.GuildMembers
+		| GatewayIntentBits.GuildPresences
+		| GatewayIntentBits.Guilds
+		| GatewayIntentBits.GuildMessageReactions
+		| GatewayIntentBits.MessageContent
+		| GatewayIntentBits.GuildMessages
 });
 client.rest = new REST(); // Creates a REST client
 client.rest.setToken(process.env.TOKEN);
@@ -56,6 +56,7 @@ await Promise.all([
 		.then(() => console.log(`[${new Date().toISOString()}] Established connection with MongoDB`))
 ]);
 
+// Starts the server
 http
 	.createServer((_, res) => {
 		res.writeHead(200, { 'Content-Type': 'application/json' });

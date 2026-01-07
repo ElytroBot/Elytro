@@ -52,7 +52,7 @@ module.exports = {
 						let formattedQuestion = json[0].question.text + '\n\n';
 						options.forEach((option, index) => {
 							const letter = String.fromCharCode(index.toString().charCodeAt(0) + 17);
-			
+
 							formattedQuestion += `${letter}. ${option}\n`;
 							row.addComponents(
 								Button.primary({
@@ -117,7 +117,9 @@ module.exports = {
 							title: 'RPS',
 							description: message,
 							footer: {
-								text: outcome == 0? 'You Won' : outcome == 1? 'You Tied' : 'You Lost'
+								text: outcome == 0
+									? 'You Won'
+									: outcome == 1 ? 'You Tied' : 'You Lost'
 							}
 						})
 					],
@@ -162,9 +164,11 @@ module.exports = {
 								custom_id: button.customId,
 								label: button.label,
 								disabled: true,
-								style: segments[0] == segments[1]? ButtonStyle.Success :
-									interaction.customId == button.customId? ButtonStyle.Danger :
-										ButtonStyle.Secondary
+								style: segments[0] == segments[1]
+									? ButtonStyle.Success
+									: interaction.customId == button.customId
+										? ButtonStyle.Danger
+										: ButtonStyle.Secondary
 							})
 						);
 					});

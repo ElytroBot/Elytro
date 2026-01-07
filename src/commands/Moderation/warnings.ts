@@ -91,7 +91,7 @@ module.exports = {
 					]
 				});
 				return;
-			
+
 			case 'create':
 				const reason = interaction.options.getString('reason', false);
 				const member = await interaction.guild.members.fetch(user.id).catch(() => {});
@@ -120,9 +120,9 @@ module.exports = {
 					});
 					return;
 				}
-				else if ((interaction.member as GuildMember).roles.highest.position <=
-					member.roles.highest.position &&
-					interaction.guild.ownerId != interaction.user.id) {
+				else if ((interaction.member as GuildMember).roles.highest.position
+					<= member.roles.highest.position
+					&& interaction.guild.ownerId != interaction.user.id) {
 					await interaction.reply({
 						embeds: [
 							new EmbedBuilder({
@@ -168,7 +168,7 @@ module.exports = {
 									title: 'Warning Created',
 									fields: [
 										{ name: 'User', value: user.toString() },
-										... reason? [{ name: 'Reason', value: reason }] : []
+										...reason ? [{ name: 'Reason', value: reason }] : []
 									]
 								})
 							]
@@ -206,7 +206,7 @@ module.exports = {
 							fields: [
 								{ name: 'ID', value: id },
 								{ name: 'User', value: `<@${warning.user_id}>` },
-								... warning.reason? [{ name: 'Reason', value: warning.reason }] : []
+								...warning.reason ? [{ name: 'Reason', value: warning.reason }] : []
 							]
 						})
 					]

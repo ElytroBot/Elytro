@@ -87,9 +87,9 @@ interface CardOptions {
 
 class LevelCard {
 	static async from(options: CardOptions) {
-		const background = options.background?
-			Buffer.from(await fetch(options.background).then(res => res.arrayBuffer())).toString('base64') :
-			null;
+		const background = options.background
+			? Buffer.from(await fetch(options.background).then(res => res.arrayBuffer())).toString('base64')
+			: null;
 		const avatar = Buffer.from(
 			await fetch(options.user.avatarURL({ extension: 'png' }) ?? `https://cdn.discordapp.com/embed/avatars/${(BigInt(options.user.id) >> 22n) % 6n}.png`)
 				.then(res => res.arrayBuffer())
@@ -107,7 +107,7 @@ class LevelCard {
 					</clipPath>
 				</defs>
 				<rect width="550" height="150" fill="#2b2d30" />
-				${options.background? `<image href="data:image/${options.background.split('.').reverse()[0]};base64,${background}" width="550" height="150" preserveAspectRatio="xMidYMid slice" />` : ''}
+				${options.background ? `<image href="data:image/${options.background.split('.').reverse()[0]};base64,${background}" width="550" height="150" preserveAspectRatio="xMidYMid slice" />` : ''}
 				<image href="data:image/png;base64,${avatar}" x="25" y="25" width="100" height="100" clip-path="url(#avatar)" />
 				<rect x="135" y="90" width="385" height="20" rx="10" fill="white" />
 				<rect x="0" y="90" width="${(options.xp / options.neededXP) * 385 + 135}" height="20" rx="10" fill="${options.accent ?? '#04a0fb'}" clip-path="url(#progress-bar)" />

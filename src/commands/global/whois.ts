@@ -58,17 +58,17 @@ module.exports = {
 							value: `<t:${Math.floor(user.createdTimestamp / 1000)}:d>`,
 							inline: true
 						},
-						...(member.roles.cache.size > 1 ?
-							[
-								{
-									name: `Roles (${member.roles.cache.size - 1})`,
-									value: member.roles.cache
-										.filter(role => role.name != '@everyone')
-										.map(role => role.toString())
-										.join(' ')
-								}
-							]
-							: []),
+						...member.roles.cache.size > 1
+							? [
+									{
+										name: `Roles (${member.roles.cache.size - 1})`,
+										value: member.roles.cache
+											.filter(role => role.name != '@everyone')
+											.map(role => role.toString())
+											.join(' ')
+									}
+								]
+							: [],
 						{
 							name: 'Highest Role',
 							value: member.roles.highest.toString(),

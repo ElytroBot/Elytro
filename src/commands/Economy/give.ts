@@ -67,8 +67,8 @@ module.exports = {
 			return;
 		}
 
-		const dbReceiver = await UserModel.findById(receiver.id) ??
-			await UserModel.create({ _id: receiver.id });
+		const dbReceiver = await UserModel.findById(receiver.id)
+			?? await UserModel.create({ _id: receiver.id });
 
 		interaction.reply({
 			embeds: [

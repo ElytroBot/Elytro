@@ -36,9 +36,9 @@ module.exports = {
 			});
 			return;
 		}
-		else if ((interaction.member as GuildMember).roles.highest.position <=
-			member.roles.highest.position &&
-			interaction.guild.ownerId != interaction.user.id) {
+		else if ((interaction.member as GuildMember).roles.highest.position
+			<= member.roles.highest.position
+			&& interaction.guild.ownerId != interaction.user.id) {
 			await interaction.reply({
 				embeds: [
 					new EmbedBuilder({
@@ -70,7 +70,7 @@ module.exports = {
 				)
 		);
 	},
-	
+
 	async onModalSubmitInteraction(interaction: ModalSubmitInteraction) {
 		const userId = interaction.customId.split('|')[1];
 		const reason = interaction.fields.getTextInputValue('reason');
@@ -111,7 +111,7 @@ module.exports = {
 							title: 'Warning Created',
 							fields: [
 								{ name: 'User', value: `<@${userId}>` },
-								... reason? [{ name: 'Reason', value: reason }] : []
+								...reason ? [{ name: 'Reason', value: reason }] : []
 							]
 						})
 					]

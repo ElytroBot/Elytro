@@ -11,8 +11,8 @@ module.exports = {
 		.setDescription('Work for some extra coins.'),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		const dbUser = await UserModel.findById(interaction.user.id) ??
-			await UserModel.create({ _id: interaction.user.id });
+		const dbUser = await UserModel.findById(interaction.user.id)
+			?? await UserModel.create({ _id: interaction.user.id });
 		const now = Math.floor(Date.now() / 1000);
 
 		if (dbUser.cooldowns.get('work') > now) {
@@ -105,7 +105,7 @@ module.exports = {
 			});
 			dbUser.balance += money;
 		}
-		
+
 		dbUser.save();
 	}
 } satisfies Command;

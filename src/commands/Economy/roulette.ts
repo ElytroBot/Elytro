@@ -51,12 +51,12 @@ module.exports = {
 				new EmbedBuilder({
 					color: EmbedColor.primary,
 					title: 'Roulette',
-					description: `You ${won? 'won' : 'lost'} ${bet.toLocaleString()} ${emojis.coin}!`
+					description: `You ${won ? 'won' : 'lost'} ${bet.toLocaleString()} ${emojis.coin}!`
 				}).setThumbnail('https://cdn-icons-png.flaticon.com/512/3425/3425938.png')
 			]
 		});
 
-		user.balance += won? bet : -bet;
+		user.balance += won ? bet : -bet;
 		user.save();
 	}
 } satisfies Command;

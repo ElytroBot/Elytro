@@ -45,8 +45,8 @@ module.exports = {
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		const user = await UserModel.findById(interaction.user.id) ??
-			await UserModel.create({ _id: interaction.user.id });
+		const user = await UserModel.findById(interaction.user.id)
+			?? await UserModel.create({ _id: interaction.user.id });
 
 		switch (interaction.options.getSubcommand()) {
 			case 'view':
@@ -159,7 +159,7 @@ module.exports = {
 				}, seconds * 1000);
 				return;
 			}
-			
+
 			case 'remove': {
 				const id = interaction.options.getString('id');
 				const reminder = user.reminders.find(reminder => reminder._id == id);

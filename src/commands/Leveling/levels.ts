@@ -48,7 +48,7 @@ async function getEmbed(page: number, guild: Guild) {
 	dbGuild.xp = new Map(array);
 	dbGuild.save();
 
-	const pageCount = (array.length / 10 < 5)? Math.ceil(array.length / 10) : 5;
+	const pageCount = (array.length / 10 < 5) ? Math.ceil(array.length / 10) : 5;
 
 	return new EmbedBuilder({
 		color: EmbedColor.primary,

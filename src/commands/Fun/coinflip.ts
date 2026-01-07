@@ -17,7 +17,7 @@ module.exports = {
 					title: 'Coin Flip',
 					description: `The coin is ${side == 0 ? 'heads' : 'tails'}!`,
 					thumbnail: {
-						url: `https://i.imgur.com/${side == 0? 'WwIZMNe' : '3Pvhkka'}.png`
+						url: `https://i.imgur.com/${side == 0 ? 'WwIZMNe' : '3Pvhkka'}.png`
 					}
 				})
 			]
