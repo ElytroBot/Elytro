@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel } from '../../schemas/Guild';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import fs from 'fs';
 import path from 'path';
 
@@ -51,7 +51,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						description: `The \`${plugin}\` plugin has been disabled.`
 					})
 				]
@@ -69,7 +69,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						description: `The \`${plugin}\` plugin has been enabled.`
 					})
 				]

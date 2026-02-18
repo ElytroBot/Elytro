@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, ButtonInteraction, ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandStringOption, InteractionContextType, ApplicationIntegrationType, EmbedBuilder, MessageFlags } from 'discord.js';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import { Button } from '../../structure/Button';
 import { UserModel } from '../../schemas/User';
 
@@ -54,7 +54,7 @@ module.exports = {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder()
-								.setColor(EmbedColor.danger)
+								.setColor(Color.Danger)
 								.setDescription('You have no reminders.')
 						],
 						flags: MessageFlags.Ephemeral
@@ -62,7 +62,7 @@ module.exports = {
 					return;
 				}
 
-				const embed = new EmbedBuilder({ color: EmbedColor.primary, title: 'Reminders' });
+				const embed = new EmbedBuilder({ color: Color.Primary, title: 'Reminders' });
 
 				user.reminders.forEach(reminder => {
 					embed.addFields(
@@ -87,7 +87,7 @@ module.exports = {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
-								color: EmbedColor.danger,
+								color: Color.Danger,
 								description: 'Invalid time format. Use `h` for hours, `m` for minutes, and `s` for seconds.'
 							})
 						],
@@ -99,7 +99,7 @@ module.exports = {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
-								color: EmbedColor.danger,
+								color: Color.Danger,
 								description: 'You have reached your limit of 5 simultaneous reminders.'
 							})
 						],
@@ -119,7 +119,7 @@ module.exports = {
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.success,
+							color: Color.Success,
 							title: 'Reminder Created',
 							description: `Reminder successfully scheduled for <t:${now + seconds}:R>.`
 						})
@@ -137,7 +137,7 @@ module.exports = {
 					interaction.user.send({
 						embeds: [
 							new EmbedBuilder({
-								color: EmbedColor.primary,
+								color: Color.Primary,
 								title: 'Reminder',
 								description: `⏰ ${time} has passed!`
 							})
@@ -168,7 +168,7 @@ module.exports = {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
-								color: EmbedColor.danger,
+								color: Color.Danger,
 								description: 'You do not have a reminder with that ID.'
 							})
 						],
@@ -180,7 +180,7 @@ module.exports = {
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.success,
+							color: Color.Success,
 							title: 'Reminder Removed',
 							fields: [
 								{ name: 'ID', value: reminder._id },
@@ -224,7 +224,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.danger,
+						color: Color.Danger,
 						description: 'Reminder not found.'
 					})
 				],
@@ -235,7 +235,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.success,
+						color: Color.Success,
 						description: 'Reminder dismissed.'
 					})
 				],
@@ -248,7 +248,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.success,
+						color: Color.Success,
 						description: 'Snoozed for 5m.'
 					})
 				],
@@ -265,7 +265,7 @@ module.exports = {
 				interaction.user.send({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Reminder',
 							description: '⏰ 5m has passed!'
 						})

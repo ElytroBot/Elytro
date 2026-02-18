@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -25,22 +26,14 @@ module.exports = {
 				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Purge',
 							fields: [{ name: 'Amount', value: amount.toString() }]
 						})
 					],
 					flags: MessageFlags.Ephemeral
 				}),
-				() => interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.danger,
-							description: 'I do not have the required permissions.'
-						})
-					],
-					flags: MessageFlags.Ephemeral
-				})
+				() => interaction.reply(Messages.MissingPermissions)
 			);
 	}
 } satisfies Command;

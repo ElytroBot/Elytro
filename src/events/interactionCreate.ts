@@ -1,46 +1,32 @@
-import { EmbedBuilder, Interaction, MessageFlags, RepliableInteraction } from 'discord.js';
+import { EmbedBuilder, Interaction, MessageFlags } from 'discord.js';
 import { Listener } from '../structure/Listener';
-import { EmbedColor } from '../structure/EmbedColor';
+import { Color } from '../structure/Color';
+import tips from '../json/tips.json';
 
 module.exports = {
 	async execute(interaction: Interaction) {
 		if (interaction.isCommand()) {
-			interaction.client.commands
+			await interaction.client.commands
 				.find(command => interaction.commandName == command.data.name)
 				.onCommandInteraction(interaction)
-				.catch((error: Error) => reportError(error, interaction));
+				.catch(e => reportError(e, interaction));
 
-			const random = Math.round(Math.random() * 50);
-
-			if (random == 0) {
-				await interaction.fetchReply();
-				interaction.followUp({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.primary,
-							title: 'Leave a Review',
-							description: 'Do you like what your seeing? Don\'t forget to leave us a [review](https://top.gg/bot/904730769929429072#reviews).'
-						})
-					],
-					flags: MessageFlags.Ephemeral
-				});
-			}
-			else if (random == 1) {
-				await interaction.fetchReply();
-				interaction.followUp({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.primary,
-							title: 'Vote',
-							description: 'Support Elytro by [voting](https://top.gg/bot/904730769929429072/vote).'
-						})
-					],
-					flags: MessageFlags.Ephemeral
-				});
+			if (Math.random() < 0.025) {
+				await interaction
+					.fetchReply()
+					.then(() => interaction.followUp({
+						embeds: [
+							new EmbedBuilder({
+								color: Color.Primary,
+								...tips[Math.floor(Math.random() * tips.length)]
+							})
+						],
+						flags: MessageFlags.Ephemeral
+					}));
 			}
 		}
 		else if (interaction.isButton()) {
-			interaction.client.commands
+			await interaction.client.commands
 				.find(command => {
 					if (interaction.message.interaction)
 						return interaction.message.interaction.commandName
@@ -49,43 +35,43 @@ module.exports = {
 						return interaction.customId.split('|')[0] == command.data.name;
 				})
 				.onButtonInteraction(interaction)
-				.catch((error: Error) => reportError(error, interaction));
+				.catch(e => reportError(e, interaction));
 		}
 		else if (interaction.isAnySelectMenu()) {
-			interaction.client.commands
+			await interaction.client.commands
 				.find(command =>
 					interaction.message.interaction.commandName.split(' ')[0] == command.data.name)
 				.onSelectMenuInteraction(interaction)
-				.catch((error: Error) => reportError(error, interaction));
-			return;
+				.catch(e => reportError(e, interaction));
 		}
 		else if (interaction.isModalSubmit()) {
-			interaction.client.commands
+			await interaction.client.commands
 				.find(command => command.data.name == interaction.customId.split('|')[0])
 				.onModalSubmitInteraction(interaction)
-				.catch((error: Error) => reportError(error, interaction));
-			return;
+				.catch(e => reportError(e, interaction));
 		}
 		else if (interaction.isAutocomplete()) {
-			interaction.client.commands
+			await interaction.client.commands
 				.find(command => interaction.commandName == command.data.name)
 				.onAutocompleteInteraction(interaction)
-				.catch((e: Error) =>
-					console.error(`[${new Date().toISOString()}] ${e.stack}`));
+				.catch(e => reportError(e, interaction));
 		}
 	}
 } satisfies Listener;
 
-function reportError(e: Error, interaction: RepliableInteraction) {
-	interaction.reply({
-		embeds: [
-			new EmbedBuilder({
-				color: EmbedColor.danger,
-				title: 'Error',
-				description: `An unknown error has occurred. You can report this error by using </report:1306353943042986016> or by joining our [Discord server](https://discord.gg/KCY2RERtxk).\`\`\`${e.message}\`\`\``
-			})
-		],
-		flags: MessageFlags.Ephemeral
-	});
+async function reportError(e: Error, interaction: Interaction) {
 	console.error(`[${new Date().toISOString()}] ${e.stack}`);
+
+	if (interaction.isRepliable()) {
+		await interaction.reply({
+			embeds: [
+				new EmbedBuilder({
+					color: Color.Danger,
+					title: 'Error',
+					description: `An unknown error has occurred. You can report this error by using </report:1336358732086640708> or by joining our [Discord server](https://discord.gg/KCY2RERtxk).\`\`\`${e.message}\`\`\``
+				})
+			],
+			flags: MessageFlags.Ephemeral
+		});
+	}
 }

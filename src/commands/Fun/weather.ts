@@ -1,8 +1,9 @@
-import { SlashCommandBuilder, ActionRowBuilder, MessageComponentInteraction, ButtonBuilder, SlashCommandStringOption, ChatInputCommandInteraction, EmbedBuilder, MessageFlags } from 'discord.js';
+import { SlashCommandBuilder, ActionRowBuilder, MessageComponentInteraction, ButtonBuilder, SlashCommandStringOption, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { Button } from '../../structure/Button';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -36,29 +37,13 @@ module.exports = {
 			});
 		}
 		catch {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'Could not fetch weather data for this location.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'Could not fetch weather data for this location.'));
 		}
 	},
 
 	async onButtonInteraction(interaction: MessageComponentInteraction) {
 		if (interaction.user.id != interaction.message.interactionMetadata.user.id) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You are not allowed to use this button!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ComponentUseNotAllowed);
 			return;
 		}
 
@@ -71,15 +56,7 @@ module.exports = {
 			});
 		}
 		catch {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'Could not fetch weather data for this location.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'Could not fetch weather data for this location.'));
 		}
 	}
 } satisfies Command;
@@ -89,7 +66,7 @@ async function getEmbed(location: string, units: string, index: number) {
 		.then(res => res.json());
 
 	return new EmbedBuilder({
-		color: EmbedColor.primary,
+		color: Color.Primary,
 		title: `Weather in ${forecast.city.name}`,
 		description: `<t:${forecast.list[index].dt}:f>`,
 		fields: [

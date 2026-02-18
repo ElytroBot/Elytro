@@ -1,8 +1,9 @@
-import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption, User } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { transfer, UserDocument, UserModel } from '../../schemas/User';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,73 +20,33 @@ module.exports = {
 		const target = interaction.options.getUser('user');
 
 		if (target.id == interaction.user.id) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You cannot rob yourself.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'You cannot rob yourself.'));
 			return;
 		}
 
 		if (target.bot) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You cannot rob a bot.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'You cannot rob a bot.'));
 			return;
 		}
 
 		const dbUser = await UserModel.findById(interaction.user.id);
 
 		if (!dbUser || dbUser.balance < 10000) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You need to have at least 10,000 ${emojis.coin} to rob someone.`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, `You need to have at least 10,000 ${emojis.coin} to rob someone.`));
 			return;
 		}
 
 		const dbTarget = await UserModel.findById(target.id);
 
 		if (!dbTarget || dbTarget.balance < 10000) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You cannot rob a user with less than 10,000 ${emojis.coin}`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, `You cannot rob a user with less than 10,000 ${emojis.coin}`));
 			return;
 		}
 
 		const now = Math.floor(Date.now() / 1000);
 
 		if (dbUser.cooldowns.get('rob') > now) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You are on cooldown! Come back <t:${dbUser.cooldowns.get('rob')}:R>`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.cooldown(dbUser.cooldowns.get('rob')));
 			return;
 		}
 
@@ -146,7 +107,7 @@ function success(interaction: ChatInputCommandInteraction, dbUser: UserDocument,
 	interaction.reply({
 		embeds: [
 			new EmbedBuilder({
-				color: EmbedColor.success,
+				color: Color.Success,
 				title: 'Success',
 				description: `You managed to steal ${money} ${emojis.coin} from ${target}.`
 			})
@@ -156,7 +117,7 @@ function success(interaction: ChatInputCommandInteraction, dbUser: UserDocument,
 	target.send({
 		embeds: [
 			new EmbedBuilder({
-				color: EmbedColor.danger,
+				color: Color.Danger,
 				title: 'Theft Alert',
 				description: `${user} stole ${money} ${emojis.coin} from you.`
 			})
@@ -175,7 +136,7 @@ function bust(interaction: ChatInputCommandInteraction, dbUser: UserDocument,
 	interaction.reply({
 		embeds: [
 			new EmbedBuilder({
-				color: EmbedColor.danger,
+				color: Color.Danger,
 				title: 'Bust',
 				description: `You got caught and had to pay ${target} ${money} ${emojis.coin}.`
 			})

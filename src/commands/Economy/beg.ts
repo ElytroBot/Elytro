@@ -1,9 +1,10 @@
-import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import outcomes from '../../json/outcomes.json';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,15 +17,7 @@ module.exports = {
 		const now = Math.floor(Date.now() / 1000);
 
 		if (user.cooldowns.get('beg') > now) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You are on cooldown! Come back <t:${user.cooldowns.get('beg')}:R>`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.cooldown(user.cooldowns.get('beg')));
 			return;
 		}
 
@@ -34,7 +27,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						title: 'Beg',
 						description: outcomes.beg.success[
 							Math.floor(Math.random() * outcomes.beg.success.length)
@@ -48,12 +41,9 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						title: 'Beg',
-						description:
-							outcomes.beg.fail[
-								Math.floor(Math.random() * outcomes.beg.fail.length)
-							]
+						description: outcomes.beg.fail[Math.floor(Math.random() * outcomes.beg.fail.length)]
 					})
 				]
 			});

@@ -1,6 +1,6 @@
 import { ApplicationIntegrationType, ChatInputCommandInteraction, ContainerBuilder, FileUploadBuilder, InteractionContextType, LabelBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder, MessageFlags, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextDisplayBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -50,7 +50,7 @@ module.exports = {
 			.then((channel: TextChannel) => channel.send({
 				components: [
 					new ContainerBuilder()
-						.setAccentColor(EmbedColor.danger)
+						.setAccentColor(Color.Danger)
 						.addTextDisplayComponents(
 							new TextDisplayBuilder()
 								.setContent(`### Bug Report\n${interaction.fields.getTextInputValue('description')}`)

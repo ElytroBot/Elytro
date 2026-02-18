@@ -1,8 +1,9 @@
-import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ChannelType, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, ModalBuilder, ModalSubmitInteraction, PrivateThreadChannel, RepliableInteraction, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder, TextChannel, TextDisplayBuilder } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ChannelType, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, ModalBuilder, ModalSubmitInteraction, PrivateThreadChannel, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder, TextChannel, TextDisplayBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel } from '../../schemas/Guild';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import { Button } from '../../structure/Button';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,14 +27,14 @@ module.exports = {
 			.catch(() => {});
 
 		if (!channel || !channel.isThread() || channel.ownerId != interaction.client.user.id) {
-			await reply(interaction, 'error', 'It doesn\'t look like this ticket exists.');
+			await interaction.reply(Messages.ephemeral(Color.Danger, 'It doesn\'t look like this ticket exists.'));
 			return;
 		}
 
 		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: 'Ticket Info',
 					fields: [
 						{
@@ -112,7 +113,7 @@ module.exports = {
 			.then(doc => doc?.ticketing_panels?.find(p => p.channel == channel.id));
 
 		if (!panel) {
-			await reply(interaction, 'error', 'It doesn\'t look like this ticketing panel exists. Try contacting a moderator for assistance.');
+			await interaction.reply(Messages.ephemeral(Color.Danger, 'It doesn\'t look like this ticketing panel exists. Try contacting a moderator for assistance.'));
 			return;
 		}
 
@@ -131,13 +132,13 @@ module.exports = {
 			})
 			.then(
 				thread => Promise.all([
-					reply(interaction, 'success', `Your ticket has been created: ${thread.toString()}`),
+					interaction.reply(Messages.ephemeral(Color.Success, `Your ticket has been created: ${thread.toString()}`)),
 					interaction.guild.channels
 						.fetch(panel.transcripts_channel)
 						.then((channel: TextChannel) => channel.send({
 							embeds: [
 								new EmbedBuilder({
-									color: EmbedColor.primary,
+									color: Color.Primary,
 									title: 'Ticket Created',
 									description: thread.toString(),
 									footer: {
@@ -149,7 +150,7 @@ module.exports = {
 							components: [getActionRow(thread.id, 'open')]
 						}))
 				]),
-				() => reply(interaction, 'error', 'I do not have the required permissions. Try contacting a moderator for assistance.')
+				() => interaction.reply(Messages.ephemeral(Color.Danger, 'I do not have the required permissions. Try contacting a moderator for assistance.'))
 			);
 	},
 
@@ -160,7 +161,7 @@ module.exports = {
 			.catch(() => {})) as PrivateThreadChannel | void;
 
 		if (!thread) {
-			await reply(interaction, 'error', 'It doesn\'t look like this ticket exists.');
+			await interaction.reply(Messages.ephemeral(Color.Danger, 'It doesn\'t look like this ticket exists.'));
 			return;
 		}
 
@@ -170,10 +171,10 @@ module.exports = {
 					.add(interaction.user.id)
 					.then(
 						() => Promise.all([
-							reply(interaction, 'success', 'You have successfully claimed this ticket.'),
+							interaction.reply(Messages.ephemeral(Color.Success, 'You have successfully claimed this ticket.')),
 							interaction.message?.edit({ components: [getActionRow(threadId, 'claim')] })
 						]),
-						() => reply(interaction, 'error', 'I do not have the required permissions.')
+						() => interaction.reply(Messages.MissingPermissions)
 					);
 				return;
 
@@ -182,10 +183,10 @@ module.exports = {
 					.setLocked(true, `Ticket closed by ${interaction.user.displayName}`)
 					.then(
 						() => Promise.all([
-							reply(interaction, 'success', 'The ticket has been successfully closed.'),
+							interaction.reply(Messages.ephemeral(Color.Success, 'The ticket has been successfully closed.')),
 							interaction.message?.edit({ components: [getActionRow(threadId, 'close')] })
 						]),
-						() => reply(interaction, 'error', 'I do not have the required permissions.')
+						() => interaction.reply(Messages.MissingPermissions)
 					);
 				return;
 
@@ -194,10 +195,10 @@ module.exports = {
 					.delete(`Ticket deleted by ${interaction.user.displayName}`)
 					.then(
 						() => Promise.all([
-							reply(interaction, 'success', 'The ticket has been successfully deleted.'),
+							interaction.reply(Messages.ephemeral(Color.Success, 'The ticket has been successfully deleted.')),
 							interaction.message?.edit({ components: [getActionRow(threadId, 'delete')] })
 						]),
-						() => reply(interaction, 'error', 'I do not have the required permissions.')
+						() => interaction.reply(Messages.MissingPermissions)
 					);
 		}
 	}
@@ -225,17 +226,5 @@ function getActionRow(thread: string, action: 'open' | 'claim' | 'close' | 'dele
 				disabled: action == 'delete'
 			})
 		]
-	});
-}
-
-async function reply(interaction: RepliableInteraction, type: 'success' | 'error', message: string) {
-	return interaction.reply({
-		embeds: [
-			new EmbedBuilder({
-				color: type == 'success' ? EmbedColor.success : EmbedColor.danger,
-				description: message
-			})
-		],
-		flags: MessageFlags.Ephemeral
 	});
 }

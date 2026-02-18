@@ -1,10 +1,11 @@
-import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { ActionRowBuilder, SelectMenuBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from '@discordjs/builders';
 import outcomes from '../../json/outcomes.json';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 const selectMenu = new StringSelectMenuBuilder()
 	.setPlaceholder('Select a place.')
@@ -39,22 +40,14 @@ module.exports = {
 		const now = Math.floor(Date.now() / 1000);
 
 		if (user.cooldowns.get('search') > now) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You are on cooldown! Come back <t:${user.cooldowns.get('search')}:R>`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.cooldown(user.cooldowns.get('search')));
 			return;
 		}
 
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: 'Search',
 					description: 'Select a place to search.'
 				})
@@ -71,24 +64,15 @@ module.exports = {
 	},
 
 	async onSelectMenuInteraction(interaction) {
-		if (interaction.user.id != interaction.message.interaction.user.id) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You are not allowed to use this select menu!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+		if (interaction.user.id != interaction.message.interactionMetadata.user.id) {
+			interaction.reply(Messages.ComponentUseNotAllowed);
 			return;
 		}
 
 		interaction.message.edit({
 			components: [
-				new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-					selectMenu.setDisabled(true)
-				)
+				new ActionRowBuilder<SelectMenuBuilder>()
+					.addComponents(selectMenu.setDisabled(true))
 			]
 		});
 
@@ -98,7 +82,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						title: 'Search',
 						description: outcomes.search.fail[Math.floor(
 							Math.random() * outcomes.search.fail.length
@@ -115,7 +99,7 @@ module.exports = {
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: 'Search',
 					description: outcomes.search.success[Math.floor(
 						Math.random() * outcomes.search.success.length

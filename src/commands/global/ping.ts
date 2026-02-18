@@ -1,5 +1,5 @@
 import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, SlashCommandBuilder } from 'discord.js';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import { Command } from '../../structure/Command';
 
 module.exports = {
@@ -19,17 +19,21 @@ module.exports = {
 	async onCommandInteraction(interaction) {
 		await interaction.reply({
 			embeds: [
-				new EmbedBuilder({ color: EmbedColor.primary, title: 'Ping' }).addFields(
-					{
-						name: 'Bot Ping',
-						value: `${interaction.client.ws.ping}ms`,
-						inline: true
-					},
-					{
-						name: 'Up since',
-						value: `<t:${Math.floor((Date.now() - interaction.client.uptime) / 1000)}:R>`
-					}
-				)
+				new EmbedBuilder({
+					color: Color.Primary,
+					title: 'Ping',
+					fields: [
+						{
+							name: 'Bot Ping',
+							value: `${interaction.client.ws.ping}ms`,
+							inline: true
+						},
+						{
+							name: 'Up since',
+							value: `<t:${Math.floor((Date.now() - interaction.client.uptime) / 1000)}:R>`
+						}
+					]
+				})
 			]
 		});
 	}

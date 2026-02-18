@@ -1,9 +1,10 @@
-import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { ActionRowBuilder, EmbedBuilder } from '@discordjs/builders';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import tutorials from '../../json/tutorials.json';
 import { Button } from '../../structure/Button';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,77 +13,56 @@ module.exports = {
 		.addStringOption(
 			new SlashCommandStringOption()
 				.setName('tutorial')
-				.setDescription('The tutorial you want.')
-				.addChoices(
-					{ name: 'Economy', value: 'Economy' }
-				)
+				.setDescription('The tutorial you want view.')
+				.addChoices(Object.keys(tutorials).map(t => ({ name: t, value: t })))
 				.setRequired(true)
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		const tutorial = interaction.options.getString('tutorial');
-
-		interaction.reply({
-			embeds: [
-				new EmbedBuilder(tutorials[tutorial][0])
-					.setColor(EmbedColor.primary)
-			],
-			components: [getActionRow(tutorial, 0)]
-		});
+		await interaction.reply(paginate(0, interaction.options.getString('tutorial')));
 	},
 
 	async onButtonInteraction(interaction) {
 		if (interaction.user.id != interaction.message.interactionMetadata.user.id) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You are not allowed to use this button!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			await interaction.reply(Messages.ComponentUseNotAllowed);
 			return;
 		}
 
 		if (interaction.customId == 'finish') {
-			interaction.message.delete();
-
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.success,
-						description: 'Tutorial successfully completed!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			await Promise.all([
+				interaction.message.delete(),
+				interaction.reply(Messages.ephemeral(Color.Success, 'Tutorial successfully completed!'))
+			]);
 			return;
 		}
 
 		const [tutorial, page] = interaction.customId.split('|');
 
-		interaction.update({
-			embeds: [
-				new EmbedBuilder(tutorials[tutorial][page])
-					.setColor(EmbedColor.primary)
-			],
-			components: [getActionRow(tutorial, Number(page))]
-		});
+		await interaction.update(paginate(Number(page), tutorial));
 	}
 } satisfies Command;
 
-function getActionRow(tutorial: string, page: number) {
-	return new ActionRowBuilder<Button>()
-		.addComponents(
-			Button.primary({
-				custom_id: `${tutorial}|${page - 1}`,
-				label: 'Previous',
-				disabled: page == 0
-			}),
-			Button.primary({
-				custom_id: page == tutorials[tutorial].length - 1 ? 'finish' : `${tutorial}|${page + 1}`,
-				label: page == tutorials[tutorial].length - 1 ? 'Finish' : 'Next'
+function paginate(page: number, tutorial: string) {
+	return {
+		embeds: [
+			new EmbedBuilder({
+				color: Color.Primary,
+				...tutorials[tutorial][page]
 			})
-		);
+		],
+		components: [
+			new ActionRowBuilder<Button>()
+				.addComponents(
+					Button.primary({
+						custom_id: `${tutorial}|${page - 1}`,
+						label: 'Previous',
+						disabled: page == 0
+					}),
+					Button.primary({
+						custom_id: page == tutorials[tutorial].length - 1 ? 'finish' : `${tutorial}|${page + 1}`,
+						label: page == tutorials[tutorial].length - 1 ? 'Finish' : 'Next'
+					})
+				)
+		]
+	};
 }

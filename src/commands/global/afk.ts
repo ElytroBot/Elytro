@@ -1,7 +1,8 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption, EmbedBuilder, MessageFlags } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { UserModel } from '../../schemas/User';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,14 +20,6 @@ module.exports = {
 
 		await UserModel
 			.findByIdAndUpdate(interaction.user.id, { afk_status: reason }, { upsert: true })
-			.then(() => interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.success,
-						description: 'Afk status successfully updated!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			}));
+			.then(() => interaction.reply(Messages.ephemeral(Color.Success, 'Afk status successfully updated!')));
 	}
 } satisfies Command;

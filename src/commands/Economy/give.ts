@@ -1,8 +1,9 @@
-import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { transfer, UserModel } from '../../schemas/User';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,28 +27,12 @@ module.exports = {
 		const receiver = interaction.options.getUser('user');
 
 		if (receiver.bot) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You cannot give money to a bot!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'You cannot give money to a bot!'));
 			return;
 		}
 
 		if (interaction.user.id == receiver.id) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You cannot give money to yourself!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'You cannot give money to yourself!'));
 			return;
 		}
 
@@ -55,15 +40,7 @@ module.exports = {
 		const amount = interaction.options.getInteger('amount');
 
 		if (!dbUser || dbUser.balance < amount) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You do not have this much money!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'You do not have this much money!'));
 			return;
 		}
 
@@ -73,7 +50,7 @@ module.exports = {
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.success,
+					color: Color.Success,
 					description: `You gave ${receiver} ${transfer(dbUser, dbReceiver, amount).toLocaleString()} ${emojis.coin}.`
 				})
 			]
@@ -82,7 +59,7 @@ module.exports = {
 		receiver.send({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: 'Donation Alert',
 					description: `${interaction.user} just gave you ${amount.toLocaleString()} ${emojis.coin}!`
 				})

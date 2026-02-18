@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, Guild, ActionRowBuilder, ButtonBuilder, ButtonInteraction, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import { GuildModel, getLevel } from '../../schemas/Guild';
 import { Button } from '../../structure/Button';
 import emojis from '../../json/emojis.json';
@@ -51,7 +51,7 @@ async function getEmbed(page: number, guild: Guild) {
 	const pageCount = (array.length / 10 < 5) ? Math.ceil(array.length / 10) : 5;
 
 	return new EmbedBuilder({
-		color: EmbedColor.primary,
+		color: Color.Primary,
 		title: 'Levels',
 		description: description,
 		footer: {

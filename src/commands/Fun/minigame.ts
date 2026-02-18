@@ -1,8 +1,9 @@
-import { ActionRow, ActionRowBuilder, ButtonBuilder, ButtonComponent, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ActionRow, ActionRowBuilder, ButtonBuilder, ButtonComponent, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import outcomes from '../../json/outcomes.json';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import { Button } from '../../structure/Button';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -31,7 +32,7 @@ module.exports = {
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'RPS',
 							description: 'Click your move.'
 						})
@@ -65,7 +66,7 @@ module.exports = {
 						interaction.reply({
 							embeds: [
 								new EmbedBuilder({
-									color: EmbedColor.primary,
+									color: Color.Primary,
 									title: 'Trivia',
 									description: formattedQuestion,
 									footer: { text: 'Powered by the-trivia-api.com' }
@@ -74,32 +75,14 @@ module.exports = {
 							components: [row]
 						});
 					})
-					.catch(() => {
-						interaction.reply({
-							embeds: [
-								new EmbedBuilder({
-									color: EmbedColor.danger,
-									description: 'It looks like there was an issue with our trivia API. Please try again later.'
-								})
-							],
-							flags: MessageFlags.Ephemeral
-						});
-					});
+					.catch(() => interaction.reply(Messages.ephemeral(Color.Danger, 'It looks like there was an issue with our trivia API. Please try again later.')));
 			}
 		}
 	},
 
 	async onButtonInteraction(interaction: ButtonInteraction) {
-		if (interaction.user.id != interaction.message.interaction.user.id) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You are not allowed to use this button!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+		if (interaction.user.id != interaction.message.interactionMetadata.user.id) {
+			interaction.reply(Messages.ComponentUseNotAllowed);
 			return;
 		}
 
@@ -113,7 +96,7 @@ module.exports = {
 				interaction.update({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'RPS',
 							description: message,
 							footer: {
@@ -134,7 +117,7 @@ module.exports = {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
-								color: EmbedColor.success,
+								color: Color.Success,
 								title: 'Trivia',
 								description: 'That is the correct answer!'
 							})
@@ -145,7 +128,7 @@ module.exports = {
 					interaction.reply({
 						embeds: [
 							new EmbedBuilder({
-								color: EmbedColor.danger,
+								color: Color.Danger,
 								title: 'Trivia',
 								description: `Incorrect. The correct answer is \`\`${segments[1]}\`\`.`
 							})

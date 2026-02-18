@@ -1,7 +1,8 @@
-import { ApplicationCommandType, ContextMenuCommandBuilder, EmbedBuilder, GuildMember, LabelBuilder, MessageFlags, ModalBuilder, ModalSubmitInteraction, PermissionFlagsBits, TextInputBuilder, TextInputStyle, UserContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, ContextMenuCommandBuilder, EmbedBuilder, GuildMember, LabelBuilder, ModalBuilder, ModalSubmitInteraction, PermissionFlagsBits, TextInputBuilder, TextInputStyle, UserContextMenuCommandInteraction } from 'discord.js';
 import { Command } from '../../structure/Command';
 import { GuildModel } from '../../schemas/Guild';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new ContextMenuCommandBuilder()
@@ -13,42 +14,18 @@ module.exports = {
 		const member = await interaction.guild.members.fetch(interaction.targetUser.id).catch(() => {});
 
 		if (!member) {
-			await interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'Could not find this user in this server.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			await interaction.reply(Messages.MemberNotFound);
 			return;
 		}
 		else if (member.id == interaction.applicationId) {
-			await interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'I cannot warn myself!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			await interaction.reply(Messages.ephemeral(Color.Danger, 'I cannot warn myself!'));
 			return;
 		}
-		else if ((interaction.member as GuildMember).roles.highest.position
-			<= member.roles.highest.position
-			&& interaction.guild.ownerId != interaction.user.id) {
-			await interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description:
-							'You do not have a higher role than the target member.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+		else if (
+			(interaction.member as GuildMember).roles.highest.position <= member.roles.highest.position
+			&& interaction.guild.ownerId != interaction.user.id
+		) {
+			await interaction.reply(Messages.HigherRole);
 			return;
 		}
 
@@ -88,7 +65,7 @@ module.exports = {
 						user.send({
 							embeds: [
 								new EmbedBuilder({
-									color: EmbedColor.danger,
+									color: Color.Danger,
 									author: {
 										name: interaction.user.displayName,
 										icon_url: interaction.user.avatarURL()
@@ -107,7 +84,7 @@ module.exports = {
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Warning Created',
 							fields: [
 								{ name: 'User', value: `<@${userId}>` },

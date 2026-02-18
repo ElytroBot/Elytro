@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
 
@@ -21,7 +21,7 @@ module.exports = {
 		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: `${user.displayName}'s Balance`,
 					description: `${dbUser?.balance.toLocaleString() ?? 0} ${emojis.coin}`
 				})

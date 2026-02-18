@@ -1,9 +1,10 @@
-import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandIntegerOption, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandIntegerOption, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import { Button } from '../../structure/Button';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandSubcommandBuilder()
@@ -22,27 +23,11 @@ module.exports = {
 		const user = await UserModel.findById(interaction.user.id);
 
 		if (user.cooldowns.get('blackjack') == 1) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'Please finish your previous game of blackjack.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'Please finish your previous game of blackjack.'));
 			return;
 		}
 		else if (user.balance < interaction.options.getInteger('bet')) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You cannot bet more money than you own.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'You cannot bet more money than you own.'));
 			return;
 		}
 
@@ -70,7 +55,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					generateEmbed(bet, dealerDeck, playerDeck, true)
-						.setColor(EmbedColor.success)
+						.setColor(Color.Success)
 						.setFooter({ text: 'You hit Blackjack!' })
 				],
 				components: []
@@ -84,7 +69,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					generateEmbed(bet, dealerDeck, playerDeck, true)
-						.setColor(EmbedColor.danger)
+						.setColor(Color.Danger)
 						.setFooter({ text: 'Dealer hit Blackjack' })
 				],
 				components: []
@@ -126,15 +111,7 @@ module.exports = {
 
 	async onButtonInteraction(interaction: ButtonInteraction) {
 		if (interaction.user.id != interaction.message.interactionMetadata.user.id) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You are not allowed to use this button!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ComponentUseNotAllowed);
 			return;
 		}
 
@@ -157,7 +134,7 @@ module.exports = {
 								playerDeck,
 								true
 							)
-								.setColor(EmbedColor.danger)
+								.setColor(Color.Danger)
 								.setFooter({ text: 'You Busted' })
 						],
 						components: []
@@ -217,7 +194,7 @@ module.exports = {
 					interaction.update({
 						embeds: [
 							generateEmbed(segments[2], dealerDeck, playerDeck, true)
-								.setColor(EmbedColor.success)
+								.setColor(Color.Success)
 								.setFooter({ text: 'Dealer Busted' })
 						],
 						components: []
@@ -232,7 +209,7 @@ module.exports = {
 					interaction.update({
 						embeds: [
 							generateEmbed(segments[2], dealerDeck, playerDeck, true)
-								.setColor(EmbedColor.success)
+								.setColor(Color.Success)
 								.setFooter({ text: 'You Won' })
 						],
 						components: []
@@ -260,7 +237,7 @@ module.exports = {
 				interaction.update({
 					embeds: [
 						generateEmbed(segments[2], dealerDeck, playerDeck, true)
-							.setColor(EmbedColor.danger)
+							.setColor(Color.Danger)
 							.setFooter({ text: 'You Lost' })
 					],
 					components: []
@@ -289,7 +266,7 @@ module.exports = {
 								playerDeck,
 								true
 							)
-								.setColor(EmbedColor.danger)
+								.setColor(Color.Danger)
 								.setFooter({ text: 'You Busted' })
 						],
 						components: []
@@ -310,7 +287,7 @@ module.exports = {
 					interaction.update({
 						embeds: [
 							generateEmbed(segments[2], dealerDeck, playerDeck, true)
-								.setColor(EmbedColor.success)
+								.setColor(Color.Success)
 								.setFooter({ text: 'Dealer Busted' })
 						],
 						components: []
@@ -325,7 +302,7 @@ module.exports = {
 					interaction.update({
 						embeds: [
 							generateEmbed(segments[2], dealerDeck, playerDeck, true)
-								.setColor(EmbedColor.success)
+								.setColor(Color.Success)
 								.setFooter({ text: 'You Won' })
 						],
 						components: []
@@ -353,7 +330,7 @@ module.exports = {
 				interaction.update({
 					embeds: [
 						generateEmbed(segments[2], dealerDeck, playerDeck, true)
-							.setColor(EmbedColor.danger)
+							.setColor(Color.Danger)
 							.setFooter({ text: 'You Lost' })
 					],
 					components: []
@@ -379,7 +356,7 @@ module.exports = {
 							interaction.message.embeds[0].fields[1].value,
 							true
 						)
-							.setColor(EmbedColor.danger)
+							.setColor(Color.Danger)
 							.setFooter({ text: 'You Surrendered' })
 					],
 					components: []
@@ -428,7 +405,7 @@ async function playDealer(dealerDeck, deckId) {
 
 function generateEmbed(bet: string, dealerCards: string, playerCards: string, dealerScore?: true) {
 	return new EmbedBuilder({
-		color: EmbedColor.primary,
+		color: Color.Primary,
 		title: 'Blackjack',
 		description: `Bet: ${bet} ${emojis.coin}`,
 		fields: [

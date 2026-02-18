@@ -1,8 +1,9 @@
-import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,22 +16,14 @@ module.exports = {
 		const now = Math.floor(Date.now() / 1000);
 
 		if (user.cooldowns.get('daily') > now) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You have already claimed today's coins! Come back <t:${user.cooldowns.get('daily')}:R>`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, `You have already claimed today's coins! Come back <t:${user.cooldowns.get('daily')}:R>`));
 			return;
 		}
 
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: 'Daily',
 					description: `You got 10,000 ${emojis.coin}`
 				})

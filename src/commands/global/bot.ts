@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ApplicationIntegrationType, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import { Button } from '../../structure/Button';
 
 module.exports = {
@@ -25,23 +25,27 @@ module.exports = {
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		await interaction.reply({
 			embeds: [
-				new EmbedBuilder({ color: EmbedColor.primary, title: 'Bot Info' }).addFields(
-					{
-						name: 'Servers',
-						value: interaction.client.guilds.cache.size.toLocaleString(),
-						inline: true
-					},
-					{
-						name: 'Commands',
-						value: interaction.client.commands.length.toString(),
-						inline: true
-					},
-					{
-						name: 'Ping',
-						value: `${interaction.client.ws.ping}ms`,
-						inline: true
-					}
-				)
+				new EmbedBuilder({
+					color: Color.Primary,
+					title: 'Bot Info',
+					fields: [
+						{
+							name: 'Servers',
+							value: interaction.client.guilds.cache.size.toLocaleString(),
+							inline: true
+						},
+						{
+							name: 'Commands',
+							value: interaction.client.commands.length.toString(),
+							inline: true
+						},
+						{
+							name: 'Ping',
+							value: `${interaction.client.ws.ping}ms`,
+							inline: true
+						}
+					]
+				})
 			],
 			components: [
 				new ActionRowBuilder<ButtonBuilder>().addComponents(

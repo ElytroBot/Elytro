@@ -1,6 +1,7 @@
-import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -29,7 +30,7 @@ module.exports = {
 				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Unban',
 							fields: [
 								{ name: 'User', value: user.toString() },
@@ -38,15 +39,7 @@ module.exports = {
 						})
 					]
 				}),
-				() => interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.danger,
-							description: 'This user is not banned.'
-						})
-					],
-					flags: MessageFlags.Ephemeral
-				})
+				() => interaction.reply(Messages.ephemeral(Color.Danger, 'This user is not banned.'))
 			);
 	}
 } satisfies Command;

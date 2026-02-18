@@ -1,9 +1,10 @@
-import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { Button } from '../../structure/Button';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,15 +17,7 @@ module.exports = {
 		const now = Math.floor(Date.now() / 1000);
 
 		if (dbUser.cooldowns.get('work') > now) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You are on cooldown! Come back <t:${dbUser.cooldowns.get('work')}:R>`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.cooldown(dbUser.cooldowns.get('work')));
 			return;
 		}
 
@@ -44,7 +37,7 @@ module.exports = {
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: 'Work',
 					description: `Remember the colors of the following shapes.\n\n${sequence}`
 				})
@@ -59,16 +52,8 @@ module.exports = {
 	},
 
 	async onButtonInteraction(interaction: ButtonInteraction) {
-		if (interaction.user.id != interaction.message.interaction.user.id) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You are not allowed to use this button!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+		if (interaction.user.id != interaction.message.interactionMetadata.user.id) {
+			interaction.reply(Messages.ComponentUseNotAllowed);
 			return;
 		}
 
@@ -81,7 +66,7 @@ module.exports = {
 			interaction.message.edit({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.success,
+						color: Color.Success,
 						title: 'Correct',
 						description: `Good job! You earned ${money.toLocaleString()} ${emojis.coin} for your work.`
 					})
@@ -96,7 +81,7 @@ module.exports = {
 			interaction.message.edit({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.danger,
+						color: Color.Danger,
 						title: 'Incorrect',
 						description: `Terrible job. You earned ${money.toLocaleString()} ${emojis.coin} for your work.`
 					})
@@ -127,7 +112,7 @@ function showButtons(interaction: ChatInputCommandInteraction, emoji: string) {
 	interaction.editReply({
 		embeds: [
 			new EmbedBuilder({
-				color: EmbedColor.primary,
+				color: Color.Primary,
 				title: 'Work',
 				description: `What color was the ${shape}?`
 			})

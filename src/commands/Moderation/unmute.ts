@@ -1,6 +1,7 @@
-import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,39 +20,15 @@ module.exports = {
 		const member = await interaction.guild.members.fetch(user.id).catch(() => {});
 
 		if (!member) {
-			await interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'Could not find this user in this server.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			await interaction.reply(Messages.MemberNotFound);
 			return;
 		}
 		else if (!member.isCommunicationDisabled()) {
-			await interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'This user is not muted!'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			await interaction.reply(Messages.ephemeral(Color.Danger, 'This user is not muted!'));
 			return;
 		}
 		else if (!member.manageable) {
-			await interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'I cannot unmute a user with a higher or equal role.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			await interaction.reply(Messages.ephemeral(Color.Danger, 'I cannot unmute a user with a higher or equal role.'));
 			return;
 		}
 
@@ -61,21 +38,13 @@ module.exports = {
 				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Unmute',
 							fields: [{ name: 'User', value: user.toString() }]
 						})
 					]
 				}),
-				() => interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.danger,
-							description: 'I do not have the required permissions.'
-						})
-					],
-					flags: MessageFlags.Ephemeral
-				})
+				() => interaction.reply(Messages.MissingPermissions)
 			);
 	}
 } satisfies Command;

@@ -1,9 +1,10 @@
-import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import outcomes from '../../json/outcomes.json';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,30 +15,14 @@ module.exports = {
 		const user = await UserModel.findById(interaction.user.id);
 
 		if (!(user?.inventory?.get('Shovel') > 0)) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You need a **${emojis.Shovel} Shovel** in order to dig! Try using \`/shop buy\` to buy one.`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, `You need a **${emojis.Shovel} Shovel** in order to dig! Try using \`/shop buy\` to buy one.`));
 			return;
 		}
 
 		const now = Math.floor(Date.now() / 1000);
 
 		if (user.cooldowns.get('dig') > now) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: `You are on cooldown! Come back <t:${user.cooldowns.get('dig')}:R>`
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.cooldown(user.cooldowns.get('dig')));
 			return;
 		}
 
@@ -49,7 +34,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						title: 'Dig',
 						description: `YOU FOUND A CHEST WITH ${money.toLocaleString()} ${emojis.coin} IN IT!!!!`
 					})
@@ -63,7 +48,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						title: 'Dig',
 						description: outcomes.dig.success[
 							Math.floor(Math.random() * outcomes.dig.success.length)
@@ -77,7 +62,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						title: 'Dig',
 						description: 'Your shovel broke! You can buy another one with `/shop buy`.'
 					})
@@ -89,7 +74,7 @@ module.exports = {
 			interaction.reply({
 				embeds: [
 					new EmbedBuilder({
-						color: EmbedColor.primary,
+						color: Color.Primary,
 						title: 'Dig',
 						description:
 							outcomes.dig.fail[

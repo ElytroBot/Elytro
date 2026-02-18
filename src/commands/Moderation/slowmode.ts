@@ -1,6 +1,7 @@
-import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandChannelOption, ChannelType, ChatInputCommandInteraction, TextChannel, SlashCommandIntegerOption, EmbedBuilder, MessageFlags } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandChannelOption, ChannelType, ChatInputCommandInteraction, TextChannel, SlashCommandIntegerOption, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -32,7 +33,7 @@ module.exports = {
 				() => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.success,
+							color: Color.Success,
 							title: 'Slowmode Set',
 							fields: [
 								{ name: 'Duration', value: `${duration}s` },
@@ -41,15 +42,7 @@ module.exports = {
 						})
 					]
 				}),
-				() => interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.danger,
-							description: 'I do not have the required permissions.'
-						})
-					],
-					flags: MessageFlags.Ephemeral
-				})
+				() => interaction.reply(Messages.MissingPermissions)
 			);
 	}
 } satisfies Command;

@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, Client, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { Button } from '../../structure/Button';
 import { UserModel } from '../../schemas/User';
@@ -42,7 +42,7 @@ async function getEmbed(page: number, client: Client) {
 	const pageCount = (userCount / 10 < 5) ? Math.ceil(userCount / 10) : 5;
 
 	return new EmbedBuilder({
-		color: EmbedColor.primary,
+		color: Color.Primary,
 		title: 'Leaderboard',
 		description: description,
 		footer: { text: `Page ${page}/${pageCount}` }

@@ -1,6 +1,7 @@
-import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,22 +18,14 @@ module.exports = {
 				json => interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Would You Rather',
 							description: json[0].question,
 							footer: { text: 'Powered by rapidapi.com' }
 						})
 					]
 				}),
-				() => interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: EmbedColor.danger,
-							description: 'It looks like there was an issue with our wyr API. Please try again later.'
-						})
-					],
-					flags: MessageFlags.Ephemeral
-				})
+				() => interaction.reply(Messages.ephemeral(Color.Danger, 'It looks like there was an issue with our wyr API. Please try again later.'))
 			);
 	}
 } satisfies Command;

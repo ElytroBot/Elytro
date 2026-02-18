@@ -3,7 +3,7 @@ import { Command } from '../../structure/Command';
 import fs from 'fs';
 import path from 'path';
 import { GuildModel } from '../../schemas/Guild';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import { Button } from '../../structure/Button';
 import emojis from '../../json/emojis.json';
 
@@ -65,7 +65,7 @@ async function paginate(page: number, guildId: string, selected: string[]) {
 	return {
 		components: [
 			new ContainerBuilder({
-				accent_color: EmbedColor.primary,
+				accent_color: Color.Primary,
 				components: [
 					new TextDisplayBuilder({
 						content: `### Help\n${commands.slice((page - 1) * 5, page * 5).join('\n\n')}`

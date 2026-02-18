@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, Guild, InteractionContextType, PresenceStatus, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 
 module.exports = {
@@ -17,8 +17,10 @@ module.exports = {
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
 		await interaction.reply({
 			embeds: [
-				new EmbedBuilder({ color: EmbedColor.primary, title: 'Server Info' })
-					.addFields(
+				new EmbedBuilder({
+					color: Color.Primary,
+					title: 'Server Info',
+					fields: [
 						{ name: 'Name', value: interaction.guild.name, inline: true },
 						{
 							name: 'Owner',
@@ -47,8 +49,9 @@ module.exports = {
 							value: interaction.guild.premiumSubscriptionCount.toLocaleString(),
 							inline: true
 						}
-					)
-					.setThumbnail(interaction.guild.iconURL())
+					],
+					thumbnail: { url: interaction.guild.iconURL() }
+				})
 			]
 		});
 	}

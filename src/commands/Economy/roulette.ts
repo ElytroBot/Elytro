@@ -1,8 +1,9 @@
-import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -32,15 +33,7 @@ module.exports = {
 		const bet = interaction.options.getInteger('bet');
 
 		if (!user || user.balance < bet) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'You cannot bet more money than you own.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			interaction.reply(Messages.ephemeral(Color.Danger, 'You cannot bet more money than you own.'));
 			return;
 		}
 
@@ -49,7 +42,7 @@ module.exports = {
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: 'Roulette',
 					description: `You ${won ? 'won' : 'lost'} ${bet.toLocaleString()} ${emojis.coin}!`
 				}).setThumbnail('https://cdn-icons-png.flaticon.com/512/3425/3425938.png')

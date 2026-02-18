@@ -2,7 +2,7 @@ import { EmbedBuilder, Message, TextChannel } from 'discord.js';
 import { Listener } from '../structure/Listener';
 import { GuildModel, getLevel, getXP } from '../schemas/Guild';
 import { UserModel } from '../schemas/User';
-import { EmbedColor } from '../structure/EmbedColor';
+import { Color } from '../structure/Color';
 
 module.exports = {
 	async execute(message: Message) {
@@ -23,7 +23,7 @@ module.exports = {
 				message.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'This user is afk.',
 							fields: [
 								{ name: 'Reason', value: mention.afk_status }

@@ -1,9 +1,10 @@
-import { ChatInputCommandInteraction, AutocompleteInteraction, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, EmbedBuilder, MessageFlags } from 'discord.js';
+import { ChatInputCommandInteraction, AutocompleteInteraction, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, EmbedBuilder } from 'discord.js';
 import { Command } from '../../structure/Command';
 import shop from '../../json/shop.json';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -62,7 +63,7 @@ module.exports = {
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Shop',
 							description: description
 						})
@@ -78,22 +79,14 @@ module.exports = {
 				const user = await UserModel.findById(interaction.user.id);
 
 				if (!user || item.price * amount > user.balance) {
-					interaction.reply({
-						embeds: [
-							new EmbedBuilder({
-								color: EmbedColor.danger,
-								description: 'You do not have enough money!'
-							})
-						],
-						flags: MessageFlags.Ephemeral
-					});
+					interaction.reply(Messages.ephemeral(Color.Danger, 'You do not have enough money!'));
 					return;
 				}
 
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Buy',
 							description: `You bought **${amount}x ${emojis[itemName]} ${itemName}**!`
 						})
@@ -115,15 +108,7 @@ module.exports = {
 				const user = await UserModel.findById(interaction.user.id);
 
 				if (!user || (user.inventory.get(itemName) ?? 0) < amount) {
-					interaction.reply({
-						embeds: [
-							new EmbedBuilder({
-								color: EmbedColor.danger,
-								description: 'You do not have enough items to sell!'
-							})
-						],
-						flags: MessageFlags.Ephemeral
-					});
+					interaction.reply(Messages.ephemeral(Color.Danger, 'You do not have enough items to sell!'));
 					return;
 				}
 
@@ -132,17 +117,14 @@ module.exports = {
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder({
-							color: EmbedColor.primary,
+							color: Color.Primary,
 							title: 'Sell',
 							description: `You sold **${amount}x ${emojis[itemName]} ${itemName}** for ${sellPrice.toLocaleString()} ${emojis.coin}!`
 						})
 					]
 				});
 
-				user.inventory.set(
-					itemName,
-					user.inventory.get(itemName) - amount
-				);
+				user.inventory.set(itemName, user.inventory.get(itemName) - amount);
 				user.balance += sellPrice;
 				user.save();
 			}

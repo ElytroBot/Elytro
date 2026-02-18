@@ -1,8 +1,9 @@
-import { ChatInputCommandInteraction, EmbedBuilder, MessageFlags, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandUserOption } from 'discord.js';
 import { Command } from '../../structure/Command';
-import { EmbedColor } from '../../structure/EmbedColor';
+import { Color } from '../../structure/Color';
 import emojis from '../../json/emojis.json';
 import { UserModel } from '../../schemas/User';
+import { Messages } from '../../structure/Messages';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,22 +20,14 @@ module.exports = {
 		const dbUser = await UserModel.findById(user.id);
 
 		if (!dbUser || Array.from(dbUser.inventory.values()).filter(i => i != 0).length == 0) {
-			await interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: EmbedColor.danger,
-						description: 'This user has no items.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+			await interaction.reply(Messages.ephemeral(Color.Danger, 'This user has no items.'));
 			return;
 		}
 
 		await interaction.reply({
 			embeds: [
 				new EmbedBuilder({
-					color: EmbedColor.primary,
+					color: Color.Primary,
 					title: `${user.displayName}'s Inventory`,
 					description: Array.from(dbUser.inventory.entries())
 						.filter(([, value]) => value != 0)
