@@ -36,7 +36,7 @@ module.exports = {
 
 		const dbUser = await UserModel.findById(user.id);
 		const level = getLevel(xp);
-		const rank = Object.values(dbGuild.xp.values()).reduce((a, v) => v > xp ? ++a : a, 1);
+		const rank = Array.from(dbGuild.xp.values()).reduce((a, v) => v > xp ? a + 1 : a, 1);
 
 		await interaction.reply({
 			components: [

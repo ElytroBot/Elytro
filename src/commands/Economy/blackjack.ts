@@ -262,7 +262,7 @@ module.exports = {
 						embeds: [
 							generateEmbed(
 								segments[2],
-								`${interaction.message.embeds[0].fields[0].value.split(' ')[0]} ${segments[4]}`,
+								`${dealerDeck.split(' ')[0]} ${segments[4]}`,
 								playerDeck,
 								true
 							)
@@ -279,7 +279,7 @@ module.exports = {
 				}
 
 				dealerDeck = await playDealer(
-					`${interaction.message.embeds[0].fields[0].value.split(' ')[0]} ${segments[4]}`,
+					`${dealerDeck.split(' ')[0]} ${segments[4]}`,
 					segments[3]
 				);
 
