@@ -1,8 +1,7 @@
-import { Client, GatewayIntentBits, REST } from 'discord.js';
+import { REST } from 'discord.js';
 import { config } from 'dotenv';
 import path from 'node:path';
 import fs from 'node:fs';
-import { Command } from './structure/Command';
 import mongoose from 'mongoose';
 import http from 'node:http';
 
@@ -12,22 +11,9 @@ process.on('uncaughtException',
 
 config(); // Configures the dotenv module to be able to use environment variables
 
-// Merges a Client interface with the Client class
-declare module 'discord.js' {
-	interface Client {
-		commands: Command[];
-	}
-}
+const client = (await import('./clients')).client;
 
 // Creates the Discord client
-const client = new Client({
-	intents: GatewayIntentBits.GuildMembers
-		| GatewayIntentBits.GuildPresences
-		| GatewayIntentBits.Guilds
-		| GatewayIntentBits.GuildMessageReactions
-		| GatewayIntentBits.MessageContent
-		| GatewayIntentBits.GuildMessages
-});
 client.rest = new REST(); // Creates a REST client
 client.rest.setToken(process.env.TOKEN);
 client.commands = []; // Initializes the client's commands
@@ -62,5 +48,7 @@ http
 		res.writeHead(200, { 'Content-Type': 'application/json' });
 		res.end(JSON.stringify(client.commands));
 	})
-	.listen(process.env.PORT || 3000,
-		() => console.log(`[${new Date().toISOString()}] Started server`));
+	.listen(
+		process.env.PORT || 3000,
+		() => console.log(`[${new Date().toISOString()}] Started server`)
+	);
