@@ -6,6 +6,7 @@ declare global {
 			PORT: string;
 			WEATHER_API_KEY: string;
 			RAPID_API_KEY: string;
+			GROQ_API_KEY: string;
 			NODE_ENV: string;
 		}
 	}
