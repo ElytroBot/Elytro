@@ -1,9 +1,13 @@
-import { ChatInputCommandInteraction, ButtonInteraction, ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandStringOption, InteractionContextType, ApplicationIntegrationType, EmbedBuilder, MessageFlags } from 'discord.js';
-import { Color } from '../../structure/Color';
+import { ChatInputCommandInteraction, ButtonInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, InteractionContextType, ApplicationIntegrationType, ModalBuilder, LabelBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, ModalSubmitInteraction, MessageFlags, ContainerBuilder, TextDisplayBuilder, SectionBuilder, SeparatorBuilder, ActionRowBuilder, ButtonBuilder, SlashCommandStringOption, AutocompleteInteraction } from 'discord.js';
+import { Reminder, ReminderModel } from '../../schemas/Reminder';
 import { Button } from '../../structure/Button';
-import { UserModel } from '../../schemas/User';
+import emojis from '../../json/emojis.json';
+import { CronosExpression, CronosTask, validate } from 'cronosjs';
+import { Messages } from '../../structure/Messages';
+import { Color } from '../../structure/Color';
+import { openai, client } from '../../clients';
 
-module.exports = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName('reminders')
 		.setDescription('Commands related to the reminder system.')
@@ -19,286 +23,363 @@ module.exports = {
 		.addSubcommand(
 			new SlashCommandSubcommandBuilder()
 				.setName('view')
-				.setDescription('View your current reminders.')
+				.setDescription('View your reminders.')
 		)
 		.addSubcommand(
 			new SlashCommandSubcommandBuilder()
-				.setName('add')
-				.setDescription('Adds a new reminder.')
+				.setName('invite')
+				.setDescription('Make a reminder invite.')
 				.addStringOption(
 					new SlashCommandStringOption()
-						.setName('time')
-						.setDescription('Time until the reminder (e.g., 1h, 30m).')
+						.setName('reminder')
+						.setDescription('The reminder for which you want to make an invitation.')
 						.setRequired(true)
+						.setAutocomplete(true)
 				)
 		)
 		.addSubcommand(
 			new SlashCommandSubcommandBuilder()
-				.setName('remove')
-				.setDescription('Removes an existing reminder.')
-				.addStringOption(
-					new SlashCommandStringOption()
-						.setName('id')
-						.setDescription('The ID of the reminder.')
-						.setRequired(true)
-				)
+				.setName('create')
+				.setDescription('Create a new reminder.')
 		),
 
 	async onCommandInteraction(interaction: ChatInputCommandInteraction) {
-		const user = await UserModel.findById(interaction.user.id)
-			?? await UserModel.create({ _id: interaction.user.id });
-
 		switch (interaction.options.getSubcommand()) {
 			case 'view':
-				if (user.reminders.length == 0) {
-					interaction.reply({
-						embeds: [
-							new EmbedBuilder()
-								.setColor(Color.Danger)
-								.setDescription('You have no reminders.')
-						],
-						flags: MessageFlags.Ephemeral
-					});
-					return;
-				}
-
-				const embed = new EmbedBuilder({ color: Color.Primary, title: 'Reminders' });
-
-				user.reminders.forEach(reminder => {
-					embed.addFields(
-						{ name: '\u200b', value: '\u200b' },
-						{ name: 'ID', value: reminder._id, inline: true },
-						{
-							name: 'Expiration',
-							value: `<t:${reminder.expiration}:R>`,
-							inline: true
-						}
-					);
-				});
-
-				interaction.reply({ embeds: [embed.spliceFields(0, 1)] });
+				await interaction.reply(await paginate(1, interaction.user.id));
 				return;
 
-			case 'add': {
-				const time = interaction.options.getString('time');
-				const seconds = parseTimeString(time);
-
-				if (seconds == null) {
-					interaction.reply({
-						embeds: [
-							new EmbedBuilder({
-								color: Color.Danger,
-								description: 'Invalid time format. Use `h` for hours, `m` for minutes, and `s` for seconds.'
-							})
-						],
-						flags: MessageFlags.Ephemeral
-					});
-					return;
-				}
-				else if (user.reminders.length >= 5) {
-					interaction.reply({
-						embeds: [
-							new EmbedBuilder({
-								color: Color.Danger,
-								description: 'You have reached your limit of 5 simultaneous reminders.'
-							})
-						],
-						flags: MessageFlags.Ephemeral
-					});
-					return;
-				}
-
-				const now = Math.floor(Date.now() / 1000);
-				const reminder = {
-					_id: Date.now()
-						.toString(36)
-						.toUpperCase(),
-					expiration: now + seconds
-				};
-
-				interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: Color.Success,
-							title: 'Reminder Created',
-							description: `Reminder successfully scheduled for <t:${now + seconds}:R>.`
-						})
-					],
-					flags: MessageFlags.Ephemeral
-				});
-
-				user.reminders.push(reminder);
-				user.save();
-
-				setTimeout(async () => {
-					if ((await UserModel.findById(interaction.user.id)).reminders
-						.findIndex(r => r._id == reminder._id) == -1) return;
-
-					interaction.user.send({
-						embeds: [
-							new EmbedBuilder({
-								color: Color.Primary,
-								title: 'Reminder',
-								description: `⏰ ${time} has passed!`
-							})
-						],
-						components: [
-							new ActionRowBuilder<ButtonBuilder>()
-								.addComponents(
-									Button.primary({
-										custom_id: `reminders|dismiss|${reminder._id}`,
-										label: 'Dismiss'
-									}),
-									Button.secondary({
-										custom_id: `reminders|snooze|${reminder._id}`,
-										label: 'Snooze'
-									})
-								)
-						]
-					});
-				}, seconds * 1000);
-				return;
-			}
-
-			case 'remove': {
-				const id = interaction.options.getString('id');
-				const reminder = user.reminders.find(reminder => reminder._id == id);
+			case 'invite':
+				const reminder = await ReminderModel.findById(interaction.options.getString('reminder'));
 
 				if (!reminder) {
-					interaction.reply({
-						embeds: [
-							new EmbedBuilder({
-								color: Color.Danger,
-								description: 'You do not have a reminder with that ID.'
-							})
-						],
-						flags: MessageFlags.Ephemeral
-					});
+					await interaction.reply(Messages.ephemeral(Color.Danger, 'This reminder does not exist.'));
+					return;
+				}
+				else if (reminder.visibility == 'PRIVATE') {
+					await interaction.reply(Messages.ephemeral(Color.Danger, 'This reminder is private.'));
 					return;
 				}
 
-				interaction.reply({
-					embeds: [
-						new EmbedBuilder({
-							color: Color.Success,
-							title: 'Reminder Removed',
-							fields: [
-								{ name: 'ID', value: reminder._id },
-								{ name: 'Expiration', value: `<t:${reminder.expiration}:R>` }
-							]
-						})
-					],
-					flags: MessageFlags.Ephemeral
+				await interaction.reply({
+					components: [buildReminderCard(reminder)],
+					flags: MessageFlags.IsComponentsV2
 				});
+				return;
 
-				user.reminders.splice(user.reminders.indexOf(reminder), 1);
-				user.save();
-			}
+			case 'create':
+				await interaction.showModal(
+					new ModalBuilder()
+						.setCustomId('reminders')
+						.setTitle('New Reminder')
+						.addLabelComponents(
+							new LabelBuilder()
+								.setLabel('Time')
+								.setDescription('When you want to be reminded.')
+								.setTextInputComponent(
+									new TextInputBuilder()
+										.setCustomId('time')
+										.setStyle(TextInputStyle.Short)
+										.setMaxLength(100)
+								),
+							new LabelBuilder()
+								.setLabel('Title')
+								.setDescription('A short title for the reminder.')
+								.setTextInputComponent(
+									new TextInputBuilder()
+										.setCustomId('title')
+										.setStyle(TextInputStyle.Short)
+										.setMaxLength(50)
+								),
+							new LabelBuilder()
+								.setLabel('Topic')
+								.setDescription('What the reminder is about.')
+								.setTextInputComponent(
+									new TextInputBuilder()
+										.setCustomId('topic')
+										.setStyle(TextInputStyle.Paragraph)
+										.setMaxLength(200)
+								),
+							new LabelBuilder()
+								.setLabel('Visibility')
+								.setDescription('Who can join the reminder.')
+								.setStringSelectMenuComponent(
+									new StringSelectMenuBuilder()
+										.setCustomId('visibility')
+										.addOptions(
+											{
+												label: 'Public',
+												description: 'Anyone can subscribe to this reminder.',
+												value: 'PUBLIC',
+												default: true
+											},
+											{
+												label: 'Private',
+												description: 'Only you can subscribe to this reminder.',
+												value: 'PRIVATE'
+											}
+										)
+								)
+						)
+				);
 		}
 	},
 
-	async onButtonInteraction(interaction: ButtonInteraction) {
-		const user = await UserModel.findById(interaction.user.id);
-		const [, action, id] = interaction.customId.split('|');
-		const reminder = user.reminders.find(reminder => reminder._id == id);
-
-		interaction.message.edit({
-			components: [
-				new ActionRowBuilder<ButtonBuilder>()
-					.addComponents(
-						Button.primary({
-							custom_id: `reminders|dismiss|${reminder._id}`,
-							label: 'Dismiss',
-							disabled: true
-						}),
-						Button.secondary({
-							custom_id: `reminders|snooze|${reminder._id}`,
-							label: 'Snooze',
-							disabled: true
-						})
-					)
-			]
+	async onAutocompleteInteraction(interaction: AutocompleteInteraction) {
+		const reminders = await ReminderModel.find({
+			subscribers: interaction.user.id,
+			visibility: 'PUBLIC'
 		});
 
-		if (!reminder) {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: Color.Danger,
-						description: 'Reminder not found.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
-		}
-		else if (action == 'dismiss') {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: Color.Success,
-						description: 'Reminder dismissed.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
-			user.reminders.splice(user.reminders.indexOf(reminder), 1);
-			user.save();
-		}
-		else if (action == 'snooze') {
-			interaction.reply({
-				embeds: [
-					new EmbedBuilder({
-						color: Color.Success,
-						description: 'Snoozed for 5m.'
-					})
-				],
-				flags: MessageFlags.Ephemeral
-			});
+		await interaction.respond(
+			reminders.map(r => ({ name: `${r.title} - ${r.topic}`.slice(0, 100), value: r.id }))
+		);
+	},
 
-			reminder.expiration = Math.floor((Date.now() + 300000) / 1000);
-			user.save();
+	async onButtonInteraction(interaction: ButtonInteraction) {
+		const [, action, ...data] = interaction.customId.split('|');
 
-			setTimeout(async () => {
-				if ((await UserModel.findById(interaction.user.id)).reminders
-					.findIndex(r => r._id == reminder._id)) return;
+		switch (action) {
+			case 'view':
+				await interaction.update(await paginate(Number(data[0]), interaction.user.id));
+				return;
 
-				interaction.user.send({
-					embeds: [
-						new EmbedBuilder({
-							color: Color.Primary,
-							title: 'Reminder',
-							description: '⏰ 5m has passed!'
-						})
-					],
-					components: [
-						new ActionRowBuilder<ButtonBuilder>()
-							.addComponents(
-								Button.primary({
-									custom_id: `reminders|dismiss|${reminder._id}`,
-									label: 'Dismiss'
-								}),
-								Button.secondary({
-									custom_id: `reminders|snooze|${reminder._id}`,
-									label: 'Snooze'
-								})
-							)
-					]
-				});
-			}, 300000);
+			case 'subscribe':
+				const reminder = await ReminderModel.findOneAndUpdate(
+					{ _id: data[0] },
+					[{
+						$set: {
+							subscribers: {
+								$cond: [
+									{ $in: [interaction.user.id, '$subscribers'] },
+									{ $setDifference: ['$subscribers', [interaction.user.id]] },
+									{ $concatArrays: ['$subscribers', [interaction.user.id]] }
+								]
+							}
+						}
+					}],
+					{ updatePipeline: true, returnDocument: 'after' }
+				);
+
+				if (!reminder) {
+					await interaction.reply(Messages.ephemeral(Color.Danger, 'This reminder no longer exists.'));
+					return;
+				}
+
+				await Promise.all([
+					interaction.reply(
+						Messages.ephemeral(
+							Color.Success,
+							reminder.subscribers.includes(interaction.user.id)
+								? 'You have subscribed to this reminder.'
+								: 'You have unsubscribed from this reminder.'
+						)
+					),
+					interaction.webhook.editMessage(interaction.message, {
+						components: [buildReminderCard(reminder)]
+					})
+				]);
+				return;
+
+			case 'unsubscribe':
+				const result = await ReminderModel.updateOne(
+					{ _id: data[0] },
+					{ $pull: { subscribers: interaction.user.id } }
+				);
+
+				await Promise.all([
+					interaction.reply(
+						result.matchedCount == 0
+							? Messages.ephemeral(Color.Danger, 'This reminder no longer exists.')
+							: result.modifiedCount == 0
+								? Messages.ephemeral(Color.Danger, 'You are already unsubscribed from this reminder.')
+								: Messages.ephemeral(Color.Success, 'You have unsubscribed from this reminder.')
+					),
+					interaction.webhook.editMessage(
+						interaction.message,
+						await paginate(Number(data[1]), interaction.user.id)
+					)
+				]);
 		}
+	},
+
+	async onModalSubmitInteraction(interaction: ModalSubmitInteraction) {
+		let cron;
+
+		try {
+			cron = await generateCron(interaction.fields.getTextInputValue('time'));
+		}
+		catch (e) {
+			await interaction.reply(Messages.ephemeral(Color.Danger, (e as Error).message));
+			return;
+		}
+
+		const visibility = interaction.fields.getStringSelectValues('visibility')[0];
+		const reminder = await ReminderModel.create({
+			schedule: cron,
+			title: interaction.fields.getTextInputValue('title'),
+			topic: interaction.fields.getTextInputValue('topic'),
+			visibility: visibility,
+			subscribers: [interaction.user.id]
+		});
+
+		schedule(reminder);
+
+		await interaction.reply({
+			components: [buildReminderCard(reminder)],
+			flags: MessageFlags.IsComponentsV2 | (visibility == 'PRIVATE' ? MessageFlags.Ephemeral : 0)
+		});
 	}
 };
 
-function parseTimeString(timeString: string): number | null {
-	const match = timeString.match(/(\d+)([hms])/);
-	if (!match) return null;
+async function paginate(page: number, user: string) {
+	const reminders = await ReminderModel.find({ subscribers: user });
+	const pages = Math.max(Math.ceil(reminders.length / 5), 1);
+	page = Math.min(page, pages);
 
-	const value = Number(match[1]);
-	const unit = match[2];
+	return {
+		components: [
+			new ContainerBuilder()
+				.setAccentColor(Color.Primary)
+				.addTextDisplayComponents(new TextDisplayBuilder().setContent('### Reminders'))
+				.addSectionComponents(
+					reminders
+						.slice((page - 1) * 5, page * 5)
+						.map(
+							r => new SectionBuilder()
+								.addTextDisplayComponents(
+									new TextDisplayBuilder()
+										.setContent(`**${r.title}**\n-# ${r.topic}\n-# 🗓️ ${getNextTimestamp(r.schedule)}`)
+								)
+								.setButtonAccessory(
+									Button.danger({
+										custom_id: `reminders|unsubscribe|${r._id}|${page}`,
+										label: 'Unsubscribe',
+										emoji: '🔕'
+									})
+								)
+						)
+				)
+				.addTextDisplayComponents(
+					...reminders.length == 0
+						? [new TextDisplayBuilder().setContent('You have no reminders.')]
+						: []
+				)
+				.addSeparatorComponents(new SeparatorBuilder())
+				.addTextDisplayComponents(new TextDisplayBuilder().setContent(`-# Page ${page}/${pages}`))
+				.addActionRowComponents(
+					new ActionRowBuilder<ButtonBuilder>()
+						.addComponents(
+							Button.primary({
+								custom_id: `reminders|view|${page - 1}`,
+								emoji: emojis.back,
+								disabled: page == 1
+							}),
+							Button.primary({
+								custom_id: `reminders|view|${page}`,
+								emoji: emojis.refresh
+							}),
+							Button.primary({
+								custom_id: `reminders|view|${page + 1}`,
+								emoji: emojis.forward,
+								disabled: page == pages
+							})
+						)
+				)
+		],
+		flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral
+	};
+}
 
-	switch (unit) {
-		case 'h': return value * 3600;
-		case 'm': return value * 60;
-		case 's': return value;
-	}
+function buildReminderCard(reminder: Reminder) {
+	return new ContainerBuilder()
+		.addTextDisplayComponents(
+			new TextDisplayBuilder()
+				.setContent(`## ${reminder.title}\n${reminder.topic}`)
+		)
+		.addSectionComponents(
+			new SectionBuilder()
+				.addTextDisplayComponents(
+					new TextDisplayBuilder()
+						.setContent(`🗓️ ${getNextTimestamp(reminder.schedule)}`)
+				)
+				.setButtonAccessory(
+					Button.success({
+						custom_id: `reminders|subscribe|${reminder._id}`,
+						label: `${reminder.subscribers.length.toLocaleString()} Subscribed`,
+						emoji: '🔔'
+					})
+				)
+		);
+}
+
+function getNextTimestamp(schedule: string) {
+	const date = CronosExpression.parse(schedule, { timezone: 'UTC' }).nextDate();
+
+	return date ? `<t:${Math.floor(date.getTime() / 1000)}:R>` : '`never`';
+}
+
+export function schedule(reminder: Reminder) {
+	new CronosTask(CronosExpression.parse(reminder.schedule, { timezone: 'UTC' }))
+		.on('run', async () =>
+			ReminderModel.findById(reminder._id).then(reminder =>
+				Promise.all(
+					reminder?.subscribers.map(id =>
+						client.users
+							.fetch(id)
+							.then(user => user.send({
+								components: [buildReminderCard(reminder!)],
+								flags: MessageFlags.IsComponentsV2
+							}))
+							.catch(() => {})
+					) ?? []
+				)
+			)
+		)
+		.on('ended', async () => ReminderModel.findByIdAndDelete(reminder._id))
+		.start();
+}
+
+async function generateCron(input: string) {
+	const schedule = (await openai.responses.create({
+		model: 'openai/gpt-oss-20b',
+		instructions:
+			`Your job is to convert natural language into a valid cron string with these exactly 7 fields:
+
+			Field              Allowed values    Special symbols
+			-----------------  ---------------   ---------------
+			Second             0-59              * / , -
+			Minute             0-59              * / , -
+			Hour               0-23              * / , -
+			Day of Month       1-31              * / , - ? L W
+			Month              1-12 or JAN-DEC   * / , -
+			Day of Week        0-7 or SUN-SAT    * / , - ? L #
+			Year               0-275759          * / , -
+
+			Obey the following rules:
+
+			1. Always output a valid cron string with the exact fields defined above.
+			2. Output the cron string in UTC. Convert from another timezone if specified.
+			3. Generate a one time cron if and only if the user explicitly uses relative language.
+			4. If the user input is ambiguous, make the best possible guess based on common usage while following the above rules.`,
+		input:
+			`CURRENT_TIME: ${new Date().toISOString()}
+			USER_TEXT: ${input}`,
+		temperature: 0
+	})).output_text.trim();
+	const nextDate = CronosExpression.parse(schedule, { timezone: 'UTC' }).nextDate();
+
+	if (
+		!validate(schedule)
+		|| !/^\S+( +\S+){6}$/.test(schedule)
+	)
+		throw new Error('It seems we failed to process your input. Please try again with a different input.');
+	else if (nextDate == null)
+		throw new Error('It seems that your input is a past date. Please try again with a future date.');
+	else if (nextDate.getTime() - Date.now() > 3.154e+10)
+		throw new Error('It seems that your input is too far in the future. Please try again with a date within the next year.');
+	else if (!/^\d+ /.test(schedule)) // If the seconds field is not a number the schedule runs more than once a minute
+		throw new Error('Your input seems to be repeating too often. Please try again with a less frequent schedule.');
+
+	return schedule;
 }
