@@ -6,7 +6,7 @@
 
 Elytro is a fun and robust Discord bot that brings a bunch of cool features to your server. Whether you're running a busy community, hanging out with friends, or looking to add some friendly competition, Elytro has you covered with it's wide range of plugins.
 
-## Plugins
+## Features
 
 ### Saluter
 Welcome new members and bid farewell to those leaving with the **Saluter** plugin:
@@ -46,6 +46,12 @@ Manage support requests cleanly and efficiently with Elytro’s **Ticketing** pl
 - Staff are automatically notified in a specified channel when a ticket is opened.
 - Use `/ticket info` to view details about a ticket.
 
+### Reminders
+Schedule reminders with Elytro’s **Reminders** system:
+- Create one-time and recurring reminders using natural language with `/reminders create`.
+- View your active reminders with `/reminders view`.
+- Share reminders with friends using `/reminders invite`.
+
 ## Installation
 
 Run the following command to clone the repository.
@@ -63,13 +69,14 @@ npm install
 
 To use this bot, you must first define some environment variables. Create a `.env` file and set the following variables. You can refer to the provided `.env.example` file as a starting point.
 
-|Variable| Description                                                     |
+|Variable           | Description                                          |
 |:------------------| :----------------------------------------------------|
 |`TOKEN`            | Your Discord bot's token.                            |
 |`CONNECTION_STRING`| The MongoDB connection string for your database.     |
 |`PORT`             | The port on which to run the API.                    |
 |`WEATHER_API_KEY`  | Your Weather API key.                                |
 |`RAPID_API_KEY`    | Your Rapid API key.                                  |
+|`GROQ_API_KEY`     | Your Groq API key.                                   |
 
 ## Run Locally
 
