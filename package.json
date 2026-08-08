@@ -17,11 +17,11 @@
   "dependencies": {
     "cheerio": "^1.2.0",
     "cronosjs": "^1.7.1",
-    "discord.js": "^14.26.4",
+    "discord.js": "^14.27.0",
     "dotenv": "^16.3.1",
-    "mongoose": "^9.0.0",
+    "mongoose": "^9.9.1",
     "openai": "^6.45.0",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.3",
     "tsx": "^4.20.6"
   },
   "devDependencies": {
