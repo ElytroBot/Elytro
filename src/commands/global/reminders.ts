@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, ButtonInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, InteractionContextType, ApplicationIntegrationType, ModalBuilder, LabelBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, ModalSubmitInteraction, MessageFlags, ContainerBuilder, TextDisplayBuilder, SectionBuilder, SeparatorBuilder, ActionRowBuilder, ButtonBuilder, SlashCommandStringOption, AutocompleteInteraction } from 'discord.js';
-import { Reminder, ReminderModel } from '../../schemas/Reminder';
+import { ReminderDocument, ReminderModel } from '../../schemas/Reminder';
 import { Button } from '../../structure/Button';
 import emojis from '../../json/emojis.json';
 import { CronosExpression, CronosTask, validate } from 'cronosjs';
@@ -291,7 +291,7 @@ async function paginate(page: number, user: string) {
 	};
 }
 
-function buildReminderCard(reminder: Reminder) {
+function buildReminderCard(reminder: ReminderDocument) {
 	return new ContainerBuilder()
 		.addTextDisplayComponents(
 			new TextDisplayBuilder()
@@ -319,7 +319,7 @@ function getNextTimestamp(schedule: string) {
 	return date ? `<t:${Math.floor(date.getTime() / 1000)}:R>` : '`never`';
 }
 
-export function schedule(reminder: Reminder) {
+export function schedule(reminder: ReminderDocument) {
 	new CronosTask(CronosExpression.parse(reminder.schedule, { timezone: 'UTC' }))
 		.on('run', async () =>
 			ReminderModel.findById(reminder._id).then(reminder =>

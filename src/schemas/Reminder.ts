@@ -32,4 +32,4 @@ const ReminderSchema = new Schema({
 }, { versionKey: false });
 
 export const ReminderModel = model('Reminder', ReminderSchema);
-export type Reminder = ReturnType<typeof ReminderModel.hydrate>;
+export type ReminderDocument = ReturnType<typeof ReminderModel.hydrate>;
