@@ -36,17 +36,8 @@ const UserSchema = new Schema({
 	}
 }, { versionKey: false });
 
-export const UserModel = model<UserDocument>('User', UserSchema);
-
-export interface UserDocument {
-	_id: string | null;
-	cooldowns: Map<string, number>;
-	balance: number;
-	inventory: Map<string, number>;
-	afk_status: string;
-	background: string;
-	accent: string;
-}
+export const UserModel = model('User', UserSchema);
+export type UserDocument = ReturnType<typeof UserModel.hydrate>;
 
 export function transfer(giver: UserDocument, receiver: UserDocument, amount: number) {
 	giver.balance -= amount;
